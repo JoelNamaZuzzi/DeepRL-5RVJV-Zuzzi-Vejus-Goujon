@@ -44,7 +44,7 @@ public class MapGenerator : MonoBehaviour
 
         blocId[0,0] = 1;
         blocId[3,3] = 2;
-        blocId[1,2] = 4;
+        blocId[1,2] = 3;
         blocId[2,1] = 3;
         
         for (int x = 0;x<mapSize.x;x++)
