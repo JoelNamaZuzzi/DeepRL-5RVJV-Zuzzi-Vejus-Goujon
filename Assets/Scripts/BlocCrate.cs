@@ -11,14 +11,16 @@ public class BlocCrate : Bloc
     //Returns a boolean true is possible, false if not
     public bool isPossible(List<List<GameObject>>gridData, Vector2Int pos, Vector2Int dir)
     {
-        /*Vector2Int newPos = pos + dir;
-        if (newPos.x > gridData.Count - 1 || newPos.y > gridData[0].Count - 1 || ||)
+        Vector2Int newPos = pos + dir;
+        //Checks if out of bounds
+        if (newPos.x > gridData.Count - 1 || newPos.y > gridData[0].Count - 1 || newPos.x<0 || newPos.y<0)
         {
-            if (!gridData[newPos.x][newPos.y].GetComponent<Bloc>().wall)
+            //Checks if new possition is wall or Crate
+            if (!gridData[newPos.x][newPos.y].GetComponent<Bloc>().wall && gridData[newPos.x][newPos.y].GetComponent<Bloc>().id!=4)
             {
                 return true;
             }
-        }*/
+        }
         return false;
     }
 }
