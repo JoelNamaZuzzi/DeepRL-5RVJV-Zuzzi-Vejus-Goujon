@@ -2,7 +2,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
 public class MapGenerator : MonoBehaviour
 {
     public Transform tilePrefab;
@@ -12,7 +11,7 @@ public class MapGenerator : MonoBehaviour
     private int[,] blocId;
     private Transform bloc;
     public List<GameObject> blocsPrefab;
-    public List<List<GameObject>> blocs;
+    public List<List<GameObject>> blocs = new List<List<GameObject>>();
     public void Awake()
     {
         xVal = mapSize.x;
@@ -36,9 +35,11 @@ public class MapGenerator : MonoBehaviour
 
         for (int x = 0; x < mapSize.x; x++)
         {
+            blocs.Add(new List<GameObject>());
             for (int y = 0; y < mapSize.y; y++)
             {
                 blocId[x,y] = 0;
+                blocs[x].Add(null);
             }
         }
 
@@ -54,6 +55,7 @@ public class MapGenerator : MonoBehaviour
                 Vector3 tilePos = new Vector3(x, 0, y);
                 GameObject newTile = Instantiate(blocsPrefab[blocId[x,y]], tilePos, Quaternion.Euler(Vector3.right * 90));
                 newTile.transform.parent = map;
+                blocs[x][y] = newTile;
             }
         }
     }
