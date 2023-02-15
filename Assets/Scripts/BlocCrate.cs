@@ -17,7 +17,7 @@ public class BlocCrate : Bloc
         {
             //Debug.Log("is Not OOB");
             //Checks if new possition is wall or Crate
-            if (!gridData[newPos.x][newPos.y].GetComponent<Bloc>().wall && gridData[newPos.x][newPos.y].GetComponent<Bloc>().id!=4)
+            if (!gridData[newPos.x][newPos.y].GetComponent<Bloc>().wall && gridData[newPos.x][newPos.y].GetComponent<BlocIdHolder>().ID!=4)
             {
                 Debug.Log("is Possible");
                 return true;
