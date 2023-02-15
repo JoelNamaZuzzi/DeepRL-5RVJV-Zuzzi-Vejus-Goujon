@@ -113,6 +113,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   wall: 1
   reward: 0
+  blocUnderMe: {fileID: 7782408288440035336, guid: e50c931e4bfbe3848b5f13534f7a9c10, type: 3}
 --- !u!114 &1315215131599305936
 MonoBehaviour:
   m_ObjectHideFlags: 0
