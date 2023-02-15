@@ -6,19 +6,17 @@ using UnityEngine;
 public class MapGenerator : MonoBehaviour
 {
     public Transform tilePrefab;
-    public Vector2 mapSize;
+    public Vector2Int mapSize;
     private int xVal;
     private int yVal;
     public int[,] blocId;
     private Transform bloc;
-
     public List<GameObject> blocs;
     public void Start()
     {
-        xVal = (int)mapSize.x;
-        yVal = (int)mapSize.y;
+        xVal = mapSize.x;
+        yVal = mapSize.y;
         blocId = new int[xVal, yVal];
-        
         GenerateMap();
     }
 
