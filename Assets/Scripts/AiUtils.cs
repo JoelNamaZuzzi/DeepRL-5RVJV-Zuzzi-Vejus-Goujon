@@ -9,9 +9,9 @@ namespace AI_Utils
     {
         public List<Action> actions;
         public float score = 0;
+        public float futureScore = 0;
         public int currentAction;
-        public int futurAction;
-        Vector2Int id;
+        public float reward = 0;
 
         public State(List<Action> newActions)
         {
