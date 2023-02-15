@@ -8,23 +8,56 @@ using Action = AI_Utils.Action;
 public class ValueIteration : MonoBehaviour
 {
     public MapGenerator _mapGenerator;
-    public List<GameObject> ListeBloc = new List<GameObject>();
+    public List<List<GameObject>> ListeBloc = new List<List<GameObject>>();
     
     public void Start()
     {
         ListeBloc = _mapGenerator.blocs;
+        Debug.Log(ListeBloc.Count);
+        ValueIterationAlgorithm();
     }
     
     // algorithme de Value Iteration
     public List<Action> ValueIterationAlgorithm()
     {
         List<Action> ListeAction = new List<Action>();
-        float delta = 0.001f;
-        foreach (var bloc in ListeBloc)
+        
+        for(int i = 0 ; i<ListeBloc.Count ; i++)
         {
-            bloc.GetComponent<Bloc>().Vs = 0;
+            for (int j = 0; j < ListeBloc.Count; j++)
+            {
+                ListeBloc[i][j].GetComponent<Bloc>().Vs = 0;
+            }
         }
+        float delta = float.MinValue;
+        //On boucle pour minimiser la valeur de Delta   
+        do
+        {
+            for(int i = 0 ; i<ListeBloc.Count ; i++)
+            {
+                for (int j = 0; j < ListeBloc.Count; j++)
+                {
+                    ListeBloc[i][j].GetComponent<Bloc>().Vs = 0;
+                }
+            }
+            for(int i = 0 ; i< ListeBloc.Count -1; i++)
+            {
+                for (int j = 0; j < ListeBloc.Count; j++)
+                {
+                    if (i + 1 > ListeBloc.Count-1 || j+1 > ListeBloc.Count-1)
+                    {
+                        continue;
+                    }
+                    Bloc BlockActuel = ListeBloc[i][j].GetComponent<Bloc>();
+                    float tmp = BlockActuel.Vs;
+                    Bloc BlockSuivant = ListeBloc[i][j+1].GetComponent<Bloc>();
+                    BlockActuel.Vs = BlockActuel.reward + (0.5f * BlockSuivant.Vs);
+                    delta = Mathf.Max(delta, tmp - BlockActuel.Vs);
+                }
+            }
+        } while (delta <0);
 
+        print("Delta = " +delta);
         return ListeAction;
     }
 }
