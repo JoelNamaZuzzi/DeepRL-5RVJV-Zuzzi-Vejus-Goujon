@@ -32,34 +32,26 @@ public class MapGenerator : MonoBehaviour
 
         Transform map = new GameObject(name).transform;
         map.parent = transform;
+
+        for (int x = 0; x < mapSize.x; x++)
+        {
+            for (int y = 0; y < mapSize.y; y++)
+            {
+                blocId[x,y] = 0;
+            }
+        }
+
+        blocId[0,0] = 1;
+        blocId[3,3] = 2;
+        blocId[1,2] = 3;
+        blocId[2,1] = 3;
         
         for (int x = 0;x<mapSize.x;x++)
         {
             for (int y = 0;y<mapSize.y;y++)
             {
+                bloc = blocs[blocId[x, y]].transform;
                 Vector3 tilePos = new Vector3(x, 0, y);
-                
-                if (x == 0 && y == 0)
-                {
-                    bloc = blocs[1].transform;
-                    blocId[x,y] = 1;
-                }
-
-                else if (x == mapSize.x - 1 && y == mapSize.y - 1)
-                {
-                    bloc = blocs[2].transform;
-                    blocId[x,y] = 2;
-                }
-                else if (x == y && x != 0 && y != 0)
-                {
-                    bloc = blocs[3].transform;
-                    blocId[x,y] = 3;
-                }
-                else
-                {
-                    bloc = blocs[0].transform;
-                    blocId[x,y] = 0;
-                }
                 Transform newTile = Instantiate(bloc, tilePos, Quaternion.Euler(Vector3.right * 90)) as Transform;
                 newTile.parent = map;
             }
