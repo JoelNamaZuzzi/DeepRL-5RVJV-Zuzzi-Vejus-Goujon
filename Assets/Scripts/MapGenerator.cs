@@ -21,7 +21,7 @@ public class MapGenerator : MonoBehaviour
     Obstacle
     }
 
-    public Case getBlocId(Vector2Int pos)
+    public Case GetBlocId(Vector2Int pos)
     {
         return blocId[pos.x, pos.y];
     }
