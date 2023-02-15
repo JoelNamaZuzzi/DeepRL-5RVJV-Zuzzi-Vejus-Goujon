@@ -13,14 +13,17 @@ public class BlocCrate : Bloc
     {
         Vector2Int newPos = pos + dir;
         //Checks if out of bounds
-        if (newPos.x > gridData.Count - 1 || newPos.y > gridData[0].Count - 1 || newPos.x<0 || newPos.y<0)
+        if (newPos.x < gridData.Count - 1 || newPos.y < gridData[0].Count - 1 || newPos.x>0 || newPos.y>0)
         {
+            //Debug.Log("is Not OOB");
             //Checks if new possition is wall or Crate
-            if (!gridData[newPos.x][newPos.y].GetComponent<Bloc>().wall && gridData[newPos.x][newPos.y].GetComponent<Bloc>().id!=4)
+            if (!gridData[newPos.x][newPos.y].GetComponent<Bloc>().wall && gridData[newPos.x][newPos.y].GetComponent<BlocIdHolder>().ID!=4)
             {
+                Debug.Log("is Possible");
                 return true;
             }
         }
+        Debug.Log("is Not Possible");
         return false;
     }
 }
