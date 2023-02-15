@@ -346,9 +346,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tilePrefab: {fileID: 7782408288440035340, guid: 269e080e13fd891449bbb19ff312fabc, type: 3}
-  mapSize: {x: 10, y: 10}
+  mapSize: {x: 4, y: 4}
   blocs:
+  - {fileID: 7782408288440035336, guid: e50c931e4bfbe3848b5f13534f7a9c10, type: 3}
   - {fileID: 7782408288440035336, guid: 262d4aeecd67d5f49a52015487ce8d64, type: 3}
   - {fileID: 7782408288440035336, guid: e4edd34304f48974aaff217b507b8cf7, type: 3}
   - {fileID: 5087843159818086452, guid: f137f8449759ac04fb09eb2d6b924c76, type: 3}
-  - {fileID: 7782408288440035336, guid: e50c931e4bfbe3848b5f13534f7a9c10, type: 3}
