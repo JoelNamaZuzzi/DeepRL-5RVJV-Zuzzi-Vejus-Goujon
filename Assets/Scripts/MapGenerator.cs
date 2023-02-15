@@ -9,15 +9,18 @@ public class MapGenerator : MonoBehaviour
     public Vector2Int mapSize;
     private int xVal;
     private int yVal;
-    public int[,] blocId;
+    private int[,] blocId;
     private Transform bloc;
-    public List<GameObject> blocs;
-    public void Start()
+    public List<GameObject> blocsPrefab;
+    public List<List<GameObject>> blocs;
+    public void Awake()
     {
         xVal = mapSize.x;
         yVal = mapSize.y;
         blocId = new int[xVal, yVal];
         GenerateMap();
+        GameObject cam = GameObject.FindGameObjectsWithTag("MainCamera")[0];
+        cam.transform.position = new Vector3(xVal/2, (xVal+yVal)*0.65f , yVal/2);
     }
 
     public void GenerateMap()
@@ -48,10 +51,9 @@ public class MapGenerator : MonoBehaviour
         {
             for (int y = 0;y<mapSize.y;y++)
             {
-                bloc = blocs[blocId[x, y]].transform;
                 Vector3 tilePos = new Vector3(x, 0, y);
-                Transform newTile = Instantiate(bloc, tilePos, Quaternion.Euler(Vector3.right * 90)) as Transform;
-                newTile.parent = map;
+                GameObject newTile = Instantiate(blocsPrefab[blocId[x,y]], tilePos, Quaternion.Euler(Vector3.right * 90));
+                newTile.transform.parent = map;
             }
         }
     }
