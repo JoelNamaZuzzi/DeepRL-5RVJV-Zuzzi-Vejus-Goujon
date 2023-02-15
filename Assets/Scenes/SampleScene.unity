@@ -347,7 +347,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   tilePrefab: {fileID: 7782408288440035340, guid: 269e080e13fd891449bbb19ff312fabc, type: 3}
   mapSize: {x: 4, y: 4}
-  blocs:
+  blocsPrefab:
   - {fileID: 7782408288440035336, guid: e50c931e4bfbe3848b5f13534f7a9c10, type: 3}
   - {fileID: 7782408288440035336, guid: 262d4aeecd67d5f49a52015487ce8d64, type: 3}
   - {fileID: 7782408288440035336, guid: e4edd34304f48974aaff217b507b8cf7, type: 3}
@@ -381,7 +381,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c3618d9d0000d4a4cbe23b8bafc32ac5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerPrefab: {fileID: 8086431192762544096, guid: e69316e3852045c4c8701344ea78f323, type: 3}
+  playerPrefab: {fileID: 6474197474374072980, guid: e69316e3852045c4c8701344ea78f323, type: 3}
   pos: {x: 0, y: 0}
 --- !u!4 &1368697370
 Transform:
