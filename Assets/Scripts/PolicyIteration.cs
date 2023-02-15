@@ -36,7 +36,7 @@ public class PolicyIteration
         }while(delta >= theta);
     }
 
-    static void PolicyImprovements(ref List<List<State>> mapState)
+    static bool PolicyImprovements(ref List<List<State>> mapState, float gamma)
     {
         bool stable = true;
 
@@ -69,14 +69,15 @@ public class PolicyIteration
                 mapState[x][y].currentAction = bestAction;
             }
         }
+
+        return stable;
     }
 
-    static Iteration(ref List<List<State>> mapState, float theta, float gamma)
+    static void Iteration(ref List<List<State>> mapState, float theta, float gamma)
     {
         do{
             PolicyEvaluation(ref mapState, theta, gamma);
 
-            PolicyImprovements(ref mapState);
-        }while(stable == false);
+        }while(PolicyImprovements(ref mapState, gamma) == false);
     }
 }
