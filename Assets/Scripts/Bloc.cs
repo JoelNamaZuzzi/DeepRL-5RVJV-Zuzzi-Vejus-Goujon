@@ -5,6 +5,7 @@ using UnityEngine;
 public class Bloc : MonoBehaviour
 {
     public int id = 0;
+    public float Vs = 0;
     public bool wall = true;
     public float reward;
 }
