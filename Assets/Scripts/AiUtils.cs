@@ -13,7 +13,7 @@ namespace AI_Utils
         public int futurAction;
         Vector2Int id;
 
-        public void State(List<Action> newActions)
+        public State(List<Action> newActions)
         {
             for(int i = 0; i < newActions.Count; i++)
             {
