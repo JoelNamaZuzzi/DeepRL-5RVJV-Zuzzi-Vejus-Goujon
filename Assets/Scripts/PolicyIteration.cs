@@ -36,48 +36,47 @@ public class PolicyIteration
         }while(delta >= theta);
     }
 
-    static void PolicyImprovements(ref List<List<State>> mapState, float theta, float gamma)
+    static void PolicyImprovements(ref List<List<State>> mapState)
     {
-        bool stable;
+        bool stable = true;
 
-        do{
-            stable = true;
-
-            for(int x = 0; x < mapState.Count; x++)
+        for(int x = 0; x < mapState.Count; x++)
+        {
+            for(int y = 0; y < mapState[x].Count; y++)
             {
-                for(int y = 0; y < mapState[x].Count; y++)
+                bool first = true;
+                int bestAction = 0;
+                float bestScore = 0;
+
+                for(int a = 0; a < mapState[x][y].actions.Count; a++)
                 {
-                    bool first = true;
-                    int bestAction = 0;
-                    float bestScore = 0;
+                    Vector2Int nextState = mapState[x][y].actions[a].Act(new Vector2Int(x, y));
 
-                    for(int a = 0; a < mapState[x][y].actions.Count; a++)
+                    float tmp = mapState[x][y].reward + mapState[nextState.x][nextState.y].score * gamma; 
+
+                    if(tmp > bestScore)
                     {
-                        Vector2Int nextState = mapState[x][y].actions[a].Act(new Vector2Int(x, y));
-
-                        float tmp = mapState[x][y].reward + mapState[nextState.x][nextState.y].score * gamma; 
-
-                        if(tmp > bestScore)
-                        {
-                            bestScore = tmp;
-                            bestAction = a;
-                        }
+                        bestScore = tmp;
+                        bestAction = a;
                     }
-
-                    if(bestScore != mapState[x][y].score)
-                    {
-                        stable = false;
-                    }
-
-                    mapState[x][y].currentAction = bestAction;
                 }
-            }
 
-            if(stable == false)
-            {
-                PolicyEvaluation(ref mapState, theta, gamma);
-            }
+                if(bestAction != mapState[x][y].currentAction)
+                {
+                    stable = false;
+                }
 
+                mapState[x][y].currentAction = bestAction;
+            }
+        }
+    }
+
+    static Iteration(ref List<List<State>> mapState, float theta, float gamma)
+    {
+        do{
+            PolicyEvaluation(ref mapState, theta, gamma);
+
+            PolicyImprovements(ref mapState);
         }while(stable == false);
     }
 }
