@@ -11,6 +11,7 @@ namespace AI_Utils
         public float score = 0;
         public int currentAction;
         public int futurAction;
+        Vector2Int id;
 
         public void State(List<Action> newActions)
         {
@@ -27,6 +28,6 @@ namespace AI_Utils
     {
         public abstract string GetId();
 
-        public abstract Vector2 Act(Vector2 id);
+        public abstract Vector2Int Act(Vector2Int id);
     }
 }
