@@ -71,6 +71,10 @@ namespace AI_Utils
         public abstract string GetId();
 
         public abstract Vector2Int Act(Vector2Int id);
+        
+        //For SARSA
+
+        public float q;
     }
 
     public class Right: Action
