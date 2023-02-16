@@ -53,6 +53,7 @@ namespace AI_Utils
         public Frobidden()
         {
             reward = -100;
+            final = true;
         }
     }
 
