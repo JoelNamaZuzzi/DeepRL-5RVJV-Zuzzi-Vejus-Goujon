@@ -27,13 +27,15 @@ public class MonteCarlo : MonoBehaviour
             List<Vector2Int> states = new List<Vector2Int>();
             List<int> actionTaken = new List<int>();
 
+            Vector2Int currentState = pos;
+
             //Generate an episode sequence
             for(int turn = 0; turn < maxTurn; turn++)
             {
-                mapState[pos.x][pos.y].visited++;
-                states.Add(pos);
+                mapState[currentState.x][currentState.y].visited++;
+                states.Add(currentState);
 
-                if(mapState[pos.x][pos.y].final == true)
+                if(mapState[currentState.x][currentState.y].final == true)
                 {
                     break;
                 }
@@ -44,15 +46,15 @@ public class MonteCarlo : MonoBehaviour
                 //Exploration
                 if(Random.Range(0.0f, 1.0f) < epsilon)
                 {
-                    action = Random.Range(0, mapState[pos.x][pos.y].actions.Count);
+                    action = Random.Range(0, mapState[currentState.x][currentState.y].actions.Count);
                     
                 }else{//Exploitation
-                    action = mapState[pos.x][pos.y].currentAction;
+                    action = mapState[currentState.x][currentState.y].currentAction;
                 }
 
                 actionTaken.Add(action);
 
-                pos = mapState[pos.x][pos.y].actions[action].Act(pos);
+                currentState = mapState[currentState.x][currentState.y].actions[action].Act(currentState);
             }
 
             //Retropropagation
