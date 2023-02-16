@@ -21,7 +21,7 @@ public class PolicyIteration
 
                     mapState[x][y].futureScore = mapState[x][y].reward + mapState[nextState.x][nextState.y].score * gamma; 
 
-                    Mathf.Max(delta, mapState[x][y].score - mapState[x][y].futureScore);
+                    delta = Mathf.Max(delta, mapState[x][y].score - mapState[x][y].futureScore);
                 }
             }
 
