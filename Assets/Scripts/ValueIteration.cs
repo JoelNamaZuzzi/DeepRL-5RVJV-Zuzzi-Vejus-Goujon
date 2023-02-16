@@ -8,7 +8,7 @@ using Action = AI_Utils.Action;
 public class ValueIteration 
 {
     // algorithme de Value Iteration
-    static public void ValueIterationAlgorithm(ref List<List<State>> mapState)
+    static void ValueIterationAlgorithm(ref List<List<State>> mapState)
     {
         float delta = float.MinValue;
         for (int x = 0; x < mapState.Count; x++)
