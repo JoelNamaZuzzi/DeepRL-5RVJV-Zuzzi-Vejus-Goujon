@@ -43,7 +43,7 @@ public class BlocCrate : Bloc
         if (!alreadyMoved)
         {
             alreadyMoved = true;
-            GameObject go =Instantiate(blocUnderMeGO, new Vector3(pos.x, 0, pos.y), Quaternion.Euler(Vector3.right * 90));
+            GameObject go =GameObject.Instantiate(blocUnderMeGO, new Vector3(pos.x, 0, pos.y), Quaternion.Euler(Vector3.right * 90));
             go.transform.parent = gridData[0][0].myGo.transform.parent;
             blocUnderMe.myGo = go;
         }
