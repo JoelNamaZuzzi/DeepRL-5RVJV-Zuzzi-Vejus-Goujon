@@ -21,25 +21,16 @@ public class SARSA
             float nextScore = mapState[nextState.x][nextState.y].actions.Count;
             
             // On utilise l'algo d'exploration/exploitation 
-
-            int nextAction;
-            if (Random.Range(0.0f, 1.0f) < epsilon)
-            {
-               //Exploration 
-               nextAction = EpsilonGreedy(mapState[x][y],nextState,epsilon);
-            }
-            else
-            {
-               //Exploitation
-               nextAction = mapState[nextState.x][nextState.y].currentAction;
-            }
+            int nextAction = EpsilonGreedy(mapState,mapState[x][y],nextState,epsilon);;
+            
             
             
          }
       }
    }
 
-   public static int EpsilonGreedy(State state,Vector2Int PosState, float epsilon)
+   // Algorithme d'exploration / exploitation
+   public static int EpsilonGreedy(List<List<State>> mapState,State state,Vector2Int PosState, float epsilon)
    {
       if (Random.Range(0f, 1f) < epsilon)
       {
@@ -48,17 +39,22 @@ public class SARSA
       }
       else
       {
+         // Exploitation
          float bestScore = float.MinValue;
          int bestAction = 0;
 
          for (int i = 0; i < state.actions.Count; i++)
          {
             Vector2Int nextStateCoordonee = state.actions[i].Act(new Vector2Int(PosState.x, PosState.y));
-           // state nextState = 
-         }
-         return 0;
-      }
+            State nextState = mapState[nextStateCoordonee.x][nextStateCoordonee.y];
 
-      
+            if (nextState.score > bestScore)
+            {
+               bestScore = nextState.score;
+               bestAction = i;
+            }
+         }
+         return bestAction;
+      }
    }
 }
