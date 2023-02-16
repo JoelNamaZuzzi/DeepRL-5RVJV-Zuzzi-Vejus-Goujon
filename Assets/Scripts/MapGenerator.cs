@@ -19,7 +19,7 @@ public class MapGenerator : MonoBehaviour
     public List<Map> maps;
     
     public int usedMapId;
-    public Boolean useMap;
+    public bool useMap;
 
     public enum Case 
     {
@@ -66,10 +66,10 @@ public class MapGenerator : MonoBehaviour
         
         if (!useMap)
         {
-            for (int x = 0; x < mapSize.x; x++)
+            for (int x = 0; x < xVal; x++)
             {
                 blocs.Add(new List<Bloc>());
-                for (int y = 0; y < mapSize.y; y++)
+                for (int y = 0; y < yVal; y++)
                 {
                     blocId[x,y] = Case.Empty;
                     blocs[x].Add(null);
@@ -83,21 +83,29 @@ public class MapGenerator : MonoBehaviour
         }
         else
         {
-            for (int x = 0; x < maps[usedMapId].mapSize.x; x++)
+            for (int x = 0; x < xVal; x++)
             {
                 blocs.Add(new List<Bloc>());
-                for (int y = 0; y < maps[usedMapId].mapSize.y; y++)
+                for (int y = 0; y < yVal; y++)
                 {
-                    blocId[x,y] = maps[usedMapId].blocId[x].ligne[y];
+                    try
+                    {
+                        blocId[x,y] = maps[usedMapId].blocId[x].ligne[y];
+                    }
+                    catch (Exception e)
+                    {
+                        blocId[x,y] = Case.Empty;
+                    }
+                    
                     blocs[x].Add(null);
                 }
             }
         }
         
         
-        for (int x = 0;x<mapSize.x;x++)
+        for (int x = 0;x<xVal;x++)
         {
-            for (int y = 0;y<mapSize.y;y++)
+            for (int y = 0;y<yVal;y++)
             {
                 Vector3 tilePos = new Vector3(x, 0, y);
                 //GameObject newTile = Instantiate(blocsPrefab[(int)blocId[x,y]], tilePos, Quaternion.Euler(Vector3.right * 90));
