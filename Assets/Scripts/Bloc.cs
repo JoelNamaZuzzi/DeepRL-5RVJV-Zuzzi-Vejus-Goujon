@@ -13,5 +13,6 @@ public class Bloc : MonoBehaviour
     public void Spawn()
     {
         myGo=Instantiate(myGo,Vector3.zero,  Quaternion.Euler(Vector3.right * 90));
+        //Debug.Log(myGo.name+" "+ID);
     }
 }

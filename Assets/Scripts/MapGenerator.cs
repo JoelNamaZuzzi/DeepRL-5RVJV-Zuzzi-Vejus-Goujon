@@ -36,13 +36,7 @@ public class MapGenerator : MonoBehaviour
         GenerateMap();
         GameObject cam = GameObject.FindGameObjectsWithTag("MainCamera")[0];
         cam.transform.position = new Vector3(xVal/2, (xVal+yVal)*0.65f , yVal/2);
-        BlocCrate bloc = blocs[1][2] as BlocCrate;
-        if (bloc.isPossible(blocs, new Vector2Int(1, 2), new Vector2Int(1, -1)))
-        {
-            blocs=bloc.move(blocs, new Vector2Int(1, 2), new Vector2Int(1, -1));
-        }
     }
-
     public void GenerateMap()
     {
         string name = "GeneratedMap";
@@ -84,6 +78,10 @@ public class MapGenerator : MonoBehaviour
                     crate.prefabTarget = blocsPrefab[(int)Case.TargetCrate];
                     crate.blocUnderMe = new Bloc();
                     crate.blocUnderMe.ID = 0;
+                }else if((int)blocId[x, y]==3)
+                {
+                    blocs[x][y] = new Bloc();
+                    blocs[x][y].wall = true;
                 }
                 else
                 {
