@@ -14,50 +14,61 @@ public class ValueIteration : MonoBehaviour
     {
         ListeBloc = _mapGenerator.blocs;
         Debug.Log(ListeBloc.Count);
-        ValueIterationAlgorithm();
+       
     }
     
     // algorithme de Value Iteration
-    public List<Action> ValueIterationAlgorithm()
+    static public void ValueIterationAlgorithm(ref List<List<State>> mapState)
     {
-        List<Action> ListeAction = new List<Action>();
-        
-        for(int i = 0 ; i<ListeBloc.Count ; i++)
-        {
-            for (int j = 0; j < ListeBloc.Count; j++)
-            {
-                ListeBloc[i][j].GetComponent<Bloc>().Vs = 0;
-            }
-        }
         float delta = float.MinValue;
         //On boucle pour minimiser la valeur de Delta   
         do
         {
-            for(int i = 0 ; i<ListeBloc.Count ; i++)
+            for (int x = 0; x < mapState.Count; x++)
             {
-                for (int j = 0; j < ListeBloc.Count; j++)
+                for (int y = 0; y < mapState[x].Count; y++)
                 {
-                    ListeBloc[i][j].GetComponent<Bloc>().Vs = 0;
-                }
-            }
-            for(int i = 0 ; i< ListeBloc.Count -1; i++)
-            {
-                for (int j = 0; j < ListeBloc.Count; j++)
-                {
-                    if (i + 1 > ListeBloc.Count-1 || j+1 > ListeBloc.Count-1)
+                    float maxA = -1;
+                    int indexActionSelected = -1;
+                    Vector2Int nextState = mapState[x][y].actions[mapState[x][y].currentAction].Act(new Vector2Int(x, y));
+                    foreach (var actions in mapState[x][y].actions)
                     {
-                        continue;
+                        float tmp = mapState[x][y].reward + mapState[nextState.x][nextState.y].score * 0.5f;
+                        if (maxA < tmp)
+                        {
+                            maxA = tmp;
+                            indexActionSelected = mapState[x][y].actions.IndexOf(actions);
+                        }
                     }
-                    Bloc BlockActuel = ListeBloc[i][j].GetComponent<Bloc>();
-                    float tmp = BlockActuel.Vs;
-                    Bloc BlockSuivant = ListeBloc[i][j+1].GetComponent<Bloc>();
-                    BlockActuel.Vs = BlockActuel.reward + (0.5f * BlockSuivant.Vs);
-                    delta = Mathf.Max(delta, tmp - BlockActuel.Vs);
+                    mapState[x][y].futureScore = maxA;
+                    mapState[x][y].currentAction = indexActionSelected;
+                    delta = Mathf.Max(delta, mapState[x][y].score - mapState[x][y].futureScore);
                 }
             }
         } while (delta <0);
+        // On créer le chemin avec les meilleurs actions 
+        for(int x = 0; x < mapState.Count; x++)
+        {
+            for(int y = 0; y < mapState[x].Count; y++)
+            {
+                int bestAction = 0;
+                float bestScore = 0;
 
-        print("Delta = " +delta);
-        return ListeAction;
+                for(int a = 0; a < mapState[x][y].actions.Count; a++)
+                {
+                    Vector2Int nextState = mapState[x][y].actions[a].Act(new Vector2Int(x, y));
+
+                    float tmp = mapState[x][y].reward + mapState[nextState.x][nextState.y].score * 0.5f; 
+
+                    if(tmp > bestScore)
+                    {
+                        bestScore = tmp;
+                        bestAction = a;
+                    }
+                }
+                mapState[x][y].currentAction = bestAction;
+            }
+        }
+        
     }
 }
