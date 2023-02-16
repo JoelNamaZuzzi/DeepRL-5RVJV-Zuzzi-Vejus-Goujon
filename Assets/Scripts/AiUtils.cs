@@ -7,15 +7,17 @@ namespace AI_Utils
 
     public abstract class State
     {
-        public List<Action> actions;
+        public List<Action> actions = new List<Action>();
         public float score = 0;
         public float futureScore = 0;
         public int currentAction;
         public float reward = 0;
-
         public bool final = false;
-        public bool visited = false;//For MonteCarlo
 
+        //For MonteCarlo
+        public bool visited = false;
+        public List<float> totalScore = new List<float>();//Score accumulated by exploitation and exploartion pour chaque action
+        public List<float> timePlayed = new List<float>();
     }
 
     public class Gridcase: State
@@ -26,6 +28,12 @@ namespace AI_Utils
             actions.Add(new Left());
             actions.Add(new Down());
             actions.Add(new Up());
+
+            for(int i = 0; i < 4; i++)
+            {
+                totalScore.Add(0);
+                timePlayed.Add(0);
+            }
 
             currentAction = Random.Range(0, actions.Count);
         }
