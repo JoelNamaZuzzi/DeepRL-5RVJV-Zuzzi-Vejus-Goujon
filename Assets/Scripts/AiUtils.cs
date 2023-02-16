@@ -15,7 +15,7 @@ namespace AI_Utils
         public bool final = false;
 
         //For MonteCarlo
-        public bool visited = false;
+        public int visited = 0;//Counts the number of time this state was visited in a episode
         public List<float> totalScore = new List<float>();//Score accumulated by exploitation and exploartion pour chaque action
         public List<float> timePlayed = new List<float>();
     }
