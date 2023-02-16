@@ -1,6 +1,8 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Drawing;
+using System.Linq;
 using UnityEngine;
 
 public class MapGenerator : MonoBehaviour
@@ -12,6 +14,12 @@ public class MapGenerator : MonoBehaviour
     private Transform bloc;
     public List<GameObject> blocsPrefab;
     public List<List<Bloc>> blocs = new List<List<Bloc>>();
+
+    [Header("Map Loading")]
+    public List<Map> maps;
+    
+    public int usedMapId;
+    public Boolean useMap;
 
     public enum Case 
     {
@@ -30,8 +38,16 @@ public class MapGenerator : MonoBehaviour
 
     public void Awake()
     {
-        xVal = mapSize.x;
-        yVal = mapSize.y;
+        if (useMap)
+        {
+            xVal = maps[usedMapId].mapSize.x;
+            yVal = maps[usedMapId].mapSize.y;
+        }
+        else
+        {
+            xVal = mapSize.x;
+            yVal = mapSize.y;
+        }
         blocId = new Case[xVal, yVal];
         GenerateMap();
         GameObject cam = GameObject.FindGameObjectsWithTag("MainCamera")[0];
@@ -47,21 +63,37 @@ public class MapGenerator : MonoBehaviour
 
         Transform map = new GameObject(name).transform;
         map.parent = transform;
-
-        for (int x = 0; x < mapSize.x; x++)
+        
+        if (!useMap)
         {
-            blocs.Add(new List<Bloc>());
-            for (int y = 0; y < mapSize.y; y++)
+            for (int x = 0; x < mapSize.x; x++)
             {
-                blocId[x,y] = Case.Empty;
-                blocs[x].Add(null);
+                blocs.Add(new List<Bloc>());
+                for (int y = 0; y < mapSize.y; y++)
+                {
+                    blocId[x,y] = Case.Empty;
+                    blocs[x].Add(null);
+                }
+            }
+
+            blocId[0,0] = Case.Start;//Début
+            blocId[3,3] = Case.Goal;//Fin
+            blocId[1,2] = Case.Crate;//Obstacle
+            blocId[2,1] = Case.Obstacle;//Obstacle
+        }
+        else
+        {
+            for (int x = 0; x < maps[usedMapId].mapSize.x; x++)
+            {
+                blocs.Add(new List<Bloc>());
+                for (int y = 0; y < maps[usedMapId].mapSize.y; y++)
+                {
+                    blocId[x,y] = maps[usedMapId].blocId[x].ligne[y];
+                    blocs[x].Add(null);
+                }
             }
         }
-
-        blocId[0,0] = Case.Start;//Début
-        blocId[3,3] = Case.Goal;//Fin
-        blocId[1,2] = Case.Crate;//Obstacle
-        blocId[2,1] = Case.Obstacle;//Obstacle
+        
         
         for (int x = 0;x<mapSize.x;x++)
         {
