@@ -12,6 +12,10 @@ namespace AI_Utils
         public float futureScore = 0;
         public int currentAction;
         public float reward = 0;
+
+        public bool final = false;
+        public bool visited = false;//For MonteCarlo
+
     }
 
     public class Gridcase: State
@@ -27,19 +31,29 @@ namespace AI_Utils
         }
     }
 
-    public class FinalCase: Gridcase
+    public class StepGoal: Gridcase
     {
-        public FinalCase()
+        public StepGoal()
         {
             reward = 1;
         }
     }
 
-    public class Wall: Gridcase
+    public class FinalGoal: Gridcase
     {
-        public Wall()
+        public FinalGoal()
+        {
+            reward = 10;
+            final = true;
+        }
+    }
+
+    public class Frobidden: Gridcase
+    {
+        public Frobidden()
         {
             reward = -100;
+            final = true;
         }
     }
 
