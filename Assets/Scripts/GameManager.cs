@@ -22,6 +22,7 @@ public class GameManager : MonoBehaviour
     {
         ValueIterator,
         PolicyIteration,
+        Montecarlo,
     }
     
     void Awake()
@@ -45,11 +46,9 @@ public class GameManager : MonoBehaviour
                 break;
             case AlgoApply.PolicyIteration:
                 PolicyIteration.Iteration(ref _mapState, 0.01f, 0.5f);
-
-                // foreach(KeyValuePair<IntList, State> kvp in _mapState)
-                // {
-                //     Debug.Log(kvp.Key[0] + " " + kvp.Key[1] + " " + kvp.Value.score);
-                // }
+                break;
+            case AlgoApply.Montecarlo:
+                MonteCarlo.Simulation(ref _mapState, 30, 1000, true, new IntList(currentState), 0.4f, true);
                 break;
         }
     }
