@@ -39,29 +39,26 @@ public class ValueIteration
                  delta = Mathf.Max(delta, kvp.Value.score - kvp.Value.futureScore);
              }
          } while (delta <0);
+         
          // On créer le chemin avec les meilleurs actions 
-        
          foreach (var kvp in mapState)
+         {
+             int bestAction = 0;
+             float bestScore = 0;
+
+             for(int a = 0; a < kvp.Value.actions.Count; a++)
+             {
+                 IntList nextState = kvp.Value.actions[a].Act(kvp.Key);
+
+                 float tmp = kvp.Value.reward + mapState[nextState].score * gamma; 
+
+                 if(tmp > bestScore)
                  {
-                     int bestAction = 0;
-                     float bestScore = 0;
-
-                     for(int a = 0; a < kvp.Value.actions.Count; a++)
-                     {
-                         IntList nextState = kvp.Value.actions[a].Act(kvp.Key);
-
-                         float tmp = kvp.Value.reward + mapState[nextState].score * gamma; 
-
-                         if(tmp > bestScore)
-                         {
-                             bestScore = tmp;
-                             bestAction = a;
-                         }
-                     } 
-                     kvp.Value.currentAction = bestAction;
+                     bestScore = tmp;
+                     bestAction = a;
                  }
-                 
-                
-             
-}
+             } 
+             kvp.Value.currentAction = bestAction;
+         }
+    }
 }

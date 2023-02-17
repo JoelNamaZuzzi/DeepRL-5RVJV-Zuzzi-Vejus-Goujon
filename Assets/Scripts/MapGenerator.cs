@@ -110,8 +110,7 @@ public class MapGenerator : MonoBehaviour
             for (int y = 0;y<yVal;y++)
             {
                 Vector3 tilePos = new Vector3(x, 0, y);
-                //GameObject newTile = Instantiate(blocsPrefab[(int)blocId[x,y]], tilePos, Quaternion.Euler(Vector3.right * 90));
-                //newTile.transform.parent = map;
+                
                 if (mapCase[x, y] == Case.Crate)
                 {
                     mapBlocs[x][y] = new BlocCrate();
