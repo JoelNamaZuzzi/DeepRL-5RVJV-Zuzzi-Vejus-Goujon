@@ -3,81 +3,87 @@ using System.Collections.Generic;
 using UnityEngine;
 
 using AI_Utils;
+using Utils;
 
 public class PolicyIteration
 {
-    static void PolicyEvaluation(ref List<List<State>> mapState, float theta, float gamma)
+    static void PolicyEvaluation(ref Dictionary<IntList, State> mapState, IntList mapSize, float theta, float gamma)
     {
-        float delta;
+        // float delta;
 
-        do{
-            delta = 0;
+        // do{
+        //     delta = 0;
 
-            for(int x = 0; x < mapState.Count; x++)
-            {
-                for(int y = 0; y < mapState[x].Count; y++)
-                {
-                    Vector2Int nextState = mapState[x][y].actions[mapState[x][y].currentAction].Act(new Vector2Int(x, y));
+        //     for(int x = 0; x < mapSize.x; x++)
+        //     {
+        //         for(int x = 0; x < mapSize.x; x++)
+        //         {
+        //             for(int y = 0; y < mapSize.y; y++)
+        //             {
+        //                 IntList nextState = mapState[x][y].actions[mapState[x][y].currentAction].Act(new IntList(x, y));
 
-                    mapState[x][y].futureScore = mapState[x][y].reward + mapState[nextState.x][nextState.y].score * gamma; 
+        //                 mapState[x][y].futureScore = mapState[x][y].reward + mapState[nextState.x][nextState.y].score * gamma; 
 
-                    delta = Mathf.Max(delta, mapState[x][y].score - mapState[x][y].futureScore);
-                }
-            }
+        //                 delta = Mathf.Max(delta, mapState[x][y].score - mapState[x][y].futureScore);
+        //             }
+        //         }
+        //     }
 
-            for(int x = 0; x < mapState.Count; x++)
-            {
-                for(int y = 0; y < mapState[x].Count; y++)
-                {
-                    mapState[x][y].score = mapState[x][y].futureScore;
-                }
-            }
+        //     for(int x = 0; x < mapState.Count; x++)
+        //     {
+        //         for(int y = 0; y < mapState[x].Count; y++)
+        //         {
+        //             mapState[x][y].score = mapState[x][y].futureScore;
+        //         }
+        //     }
 
-        }while(delta >= theta);
+        // }while(delta >= theta);
     }
 
-    static bool PolicyImprovements(ref List<List<State>> mapState, float gamma)
+    static bool PolicyImprovements(ref Dictionary<IntList, State> mapState, float gamma)
     {
-        bool stable = true;
+        return false;
 
-        for(int x = 0; x < mapState.Count; x++)
-        {
-            for(int y = 0; y < mapState[x].Count; y++)
-            {
-                bool first = true;
-                int bestAction = 0;
-                float bestScore = 0;
+        // bool stable = true;
 
-                for(int a = 0; a < mapState[x][y].actions.Count; a++)
-                {
-                    Vector2Int nextState = mapState[x][y].actions[a].Act(new Vector2Int(x, y));
+        // for(int x = 0; x < mapState.Count; x++)
+        // {
+        //     for(int y = 0; y < mapState[x].Count; y++)
+        //     {
+        //         bool first = true;
+        //         int bestAction = 0;
+        //         float bestScore = 0;
 
-                    float tmp = mapState[x][y].reward + mapState[nextState.x][nextState.y].score * gamma; 
+        //         for(int a = 0; a < mapState[x][y].actions.Count; a++)
+        //         {
+        //             IntList nextState = mapState[x][y].actions[a].Act(new IntList(x, y));
 
-                    if(tmp > bestScore || first == true)
-                    {
-                        first = false;
-                        bestScore = tmp;
-                        bestAction = a;
-                    }
-                }
+        //             float tmp = mapState[x][y].reward + mapState[nextState.x][nextState.y].score * gamma; 
 
-                if(bestAction != mapState[x][y].currentAction)
-                {
-                    stable = false;
-                }
+        //             if(tmp > bestScore || first == true)
+        //             {
+        //                 first = false;
+        //                 bestScore = tmp;
+        //                 bestAction = a;
+        //             }
+        //         }
 
-                mapState[x][y].currentAction = bestAction;
-            }
-        }
+        //         if(bestAction != mapState[x][y].currentAction)
+        //         {
+        //             stable = false;
+        //         }
 
-        return stable;
+        //         mapState[x][y].currentAction = bestAction;
+        //     }
+        // }
+
+        // return stable;
     }
 
-    static void Iteration(ref List<List<State>> mapState, float theta, float gamma)
+    static void Iteration(ref Dictionary<IntList, State> mapState, float theta, float gamma)
     {
         do{
-            PolicyEvaluation(ref mapState, theta, gamma);
+            //PolicyEvaluation(ref mapState, theta, gamma);
 
         }while(PolicyImprovements(ref mapState, gamma) == false);
     }
