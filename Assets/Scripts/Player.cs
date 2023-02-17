@@ -1,20 +1,25 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-    public GameObject playerPrefab;
-    Vector3 playerPos = new Vector3(0, 1, 0);
-    private GameObject playerInstantiate;
+    [SerializeField] public GameObject playerPrefab;
+    private Vector3 _playerPos;
+    private GameObject _playerInstantiate;
 
-    public int[,] blocId;
-
-    public Vector2 pos;
-    // Start is called before the first frame update
-    void Start()
+    public void Init(Vector3 startPosition)
     {
-        playerInstantiate = Instantiate(playerPrefab, new Vector3(0, 1, 0), Quaternion.identity);
+        _playerPos = startPosition;
+        _playerInstantiate = Instantiate(playerPrefab, _playerPos, Quaternion.identity);
+    }
+    public void MovePlayer(Vector3 direction)
+    {
+        _playerInstantiate.transform.position += direction;
+    }
+
+    public Vector3 GetPlayerPosition()
+    {
+        Vector3 playerPosition = _playerInstantiate.transform.position;
+        return playerPosition;
     }
     
     // Update is called once per frame
@@ -40,21 +45,21 @@ public class Player : MonoBehaviour
     void Right()
     {
         Debug.LogWarningFormat("Right");
-        playerInstantiate.transform.position = playerInstantiate.transform.position + new Vector3(1, 0, 0);
+        _playerInstantiate.transform.position = _playerInstantiate.transform.position + new Vector3(1, 0, 0);
     }
     void Left()
     {
         Debug.LogWarningFormat("Left");
-        playerInstantiate.transform.position = playerInstantiate.transform.position + new Vector3(-1, 0, 0);
+        _playerInstantiate.transform.position = _playerInstantiate.transform.position + new Vector3(-1, 0, 0);
     }
     void Up()
     {
         Debug.LogWarningFormat("Up");
-        playerInstantiate.transform.position = playerInstantiate.transform.position + new Vector3(0, 0, 1);
+        _playerInstantiate.transform.position = _playerInstantiate.transform.position + new Vector3(0, 0, 1);
     }
     void Down()
     {
         Debug.LogWarningFormat("Down");
-        playerInstantiate.transform.position = playerInstantiate.transform.position + new Vector3(0, 0, -1);
+        _playerInstantiate.transform.position = _playerInstantiate.transform.position + new Vector3(0, 0, -1);
     }
 }
