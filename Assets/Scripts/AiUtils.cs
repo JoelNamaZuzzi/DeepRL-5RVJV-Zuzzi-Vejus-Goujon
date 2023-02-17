@@ -12,7 +12,7 @@ namespace AI_Utils
         public List<Action> actions = new List<Action>();
         public float score = 0;
         public float futureScore = 0;
-        public int currentAction;
+        public int currentAction = 0;
         public float reward = 0;
         public bool final = false;
         public bool start = false;
@@ -109,7 +109,7 @@ namespace AI_Utils
     {
         public abstract string GetId();
 
-        public abstract IntList Act(IntList id);
+        public abstract IntList Act(in IntList id);
         
         //For SARSA
 
@@ -123,10 +123,12 @@ namespace AI_Utils
             return "right";
         }
 
-        public override IntList Act(IntList id)
+        public override IntList Act(in IntList id)
         {
-            id[0]++;
-            return id;
+            IntList newId = new IntList(id);
+
+            newId[0]++;
+            return newId;
         }
     }
 
@@ -137,10 +139,12 @@ namespace AI_Utils
             return "left";
         }
 
-        public override IntList Act(IntList id)
+        public override IntList Act(in IntList id)
         {
-            id[0]--;
-            return id;
+            IntList newId = new IntList(id);
+
+            newId[0]--;
+            return newId;
         }
     }
 
@@ -151,10 +155,12 @@ namespace AI_Utils
             return "up";
         }
 
-        public override IntList Act(IntList id)
+        public override IntList Act(in IntList id)
         {
-            id[1]++;
-            return id;
+            IntList newId = new IntList(id);
+
+            newId[1]++;
+            return newId;
         }
     }
 
@@ -165,10 +171,12 @@ namespace AI_Utils
             return "down";
         }
 
-        public override IntList Act(IntList id)
+        public override IntList Act(in IntList id)
         {
-            id[1]--;
-            return id;
+            IntList newId = new IntList(id);
+
+            newId[1]--;
+            return newId;
         }
     }
 
