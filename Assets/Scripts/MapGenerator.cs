@@ -258,7 +258,7 @@ public class MapGenerator : MonoBehaviour
             }
         }
 
-        if(mapState[key].GetId() == "Gridcase" || mapState[key].GetId() == "StepGoal")
+        if(mapState[key].GetId() == "Gridcase" || mapState[key].GetId() == "StepGoal" || mapState[key].GetId() == "FinalGoal")
         {
             currentState.AddAction(a);
         }

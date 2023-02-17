@@ -12,7 +12,7 @@ namespace AI_Utils
         public List<Action> actions = new List<Action>();
         public float score = 0;
         public float futureScore = 0;
-        public int currentAction;
+        public int currentAction = 0;
         public float reward = 0;
         public bool final = false;
         public bool start = false;

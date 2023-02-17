@@ -16,9 +16,17 @@ public class PolicyIteration
 
             foreach(KeyValuePair<IntList, State> kvp in mapState)
             {
-                IntList nextState = kvp.Value.actions[kvp.Value.currentAction].Act(kvp.Key);
+                if(kvp.Value.final == true || kvp.Value.actions.Count == 0)
+                {
+                    kvp.Value.futureScore = kvp.Value.reward;
+                }else{
+                    IntList nextState = kvp.Value.actions[kvp.Value.currentAction].Act(kvp.Key);
 
-                kvp.Value.futureScore = kvp.Value.reward + mapState[nextState].score * gamma; 
+                    kvp.Value.futureScore = kvp.Value.reward + mapState[nextState].score * gamma; 
+                    //Debug.Log(nextState[0] + " " + nextState[1] + " " + kvp.Key[0] + " " + kvp.Key[1]);
+                }
+
+                
 
                 delta = Mathf.Max(delta, kvp.Value.score - kvp.Value.futureScore);
             }
@@ -33,8 +41,6 @@ public class PolicyIteration
 
     static bool PolicyImprovements(ref Dictionary<IntList, State> mapState, float gamma)
     {
-        return false;
-
         bool stable = true;
 
         foreach(KeyValuePair<IntList, State> kvp in mapState)
@@ -68,7 +74,7 @@ public class PolicyIteration
         return stable;
     }
 
-    static void Iteration(ref Dictionary<IntList, State> mapState, float theta, float gamma)
+    public static void Iteration(ref Dictionary<IntList, State> mapState, float theta, float gamma)
     {
         do{
             PolicyEvaluation(ref mapState, theta, gamma);

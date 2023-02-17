@@ -44,7 +44,7 @@ public class GameManager : MonoBehaviour
                 ValueIteration.ValueIterationAlgorithm(ref _mapState,0.5f);
                 break;
             case AlgoApply.PolicyIteration:
-                PolicyIteration.Iteration(ref _mapState, 0.1f, 0.5f);
+                PolicyIteration.Iteration(ref _mapState, 0.01f, 0.5f);
 
                 // foreach(KeyValuePair<IntList, State> kvp in _mapState)
                 // {
