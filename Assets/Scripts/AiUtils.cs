@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+using Utils;
+
 namespace AI_Utils
 {
 
@@ -119,7 +121,7 @@ namespace AI_Utils
     {
         public abstract string GetId();
 
-        public abstract Vector2Int Act(Vector2Int id);
+        public abstract IntList Act(IntList id);
         
         //For SARSA
 
@@ -133,9 +135,9 @@ namespace AI_Utils
             return "right";
         }
 
-        public override Vector2Int Act(Vector2Int id)
+        public override IntList Act(IntList id)
         {
-            id.x++;
+            id[0]++;
             return id;
         }
     }
@@ -147,9 +149,9 @@ namespace AI_Utils
             return "left";
         }
 
-        public override Vector2Int Act(Vector2Int id)
+        public override IntList Act(IntList id)
         {
-            id.x--;
+            id[0]--;
             return id;
         }
     }
@@ -161,9 +163,9 @@ namespace AI_Utils
             return "up";
         }
 
-        public override Vector2Int Act(Vector2Int id)
+        public override IntList Act(IntList id)
         {
-            id.y++;
+            id[1]++;
             return id;
         }
     }
@@ -175,9 +177,9 @@ namespace AI_Utils
             return "down";
         }
 
-        public override Vector2Int Act(Vector2Int id)
+        public override IntList Act(IntList id)
         {
-            id.y--;
+            id[1]--;
             return id;
         }
     }
