@@ -10,31 +10,24 @@ public class MapGenerator : MonoBehaviour
     public Vector2Int mapSize;
     public int xVal;
     public int yVal;
-    private Case[,] blocId;
     private Transform bloc;
     public List<GameObject> blocsPrefab;
-
-
+    
     [Header("Map Loading")]
     public List<Map> maps;
     
     public int usedMapId;
     public bool useMap;
 
-    public enum Case 
+    public enum Case
     {
-    Empty,
-    Start,
-    Goal,
-    Obstacle,
-    Crate,
-    TargetCrate,
-    CrateOnTarget
-    }
-
-    public Case GetBlocId(Vector2Int pos)
-    {
-        return blocId[pos.x, pos.y];
+        Empty,
+        Start,
+        Goal,
+        Obstacle,
+        Crate,
+        TargetCrate,
+        CrateOnTarget
     }
 
     public void Awake()
@@ -49,12 +42,11 @@ public class MapGenerator : MonoBehaviour
             xVal = mapSize.x;
             yVal = mapSize.y;
         }
-        blocId = new Case[xVal, yVal];
         GameObject cam = GameObject.FindGameObjectsWithTag("MainCamera")[0];
         cam.transform.position = new Vector3(xVal/2, (xVal+yVal)*0.65f , yVal/2);
     }
 
-    public void GenerateMap(ref List<List<Bloc>> mapList)
+    public void GenerateMap(ref List<List<Bloc>> mapBlocs, ref Case[,] mapCase)
     {
         string name = "GeneratedMap";
         if (transform.Find(name))
@@ -69,36 +61,36 @@ public class MapGenerator : MonoBehaviour
         {
             for (int x = 0; x < xVal; x++)
             {
-                mapList.Add(new List<Bloc>());
+                mapBlocs.Add(new List<Bloc>());
                 for (int y = 0; y < yVal; y++)
                 {
-                    blocId[x,y] = Case.Empty;
-                    mapList[x].Add(null);
+                    mapCase[x,y] = Case.Empty;
+                    mapBlocs[x].Add(null);
                 }
             }
 
-            blocId[0,0] = Case.Start;//Début
-            blocId[3,3] = Case.Goal;//Fin
-            blocId[1,2] = Case.Crate;//Obstacle
-            blocId[2,1] = Case.Obstacle;//Obstacle
+            mapCase[0,0] = Case.Start;//Début
+            mapCase[3,3] = Case.Goal;//Fin
+            mapCase[1,2] = Case.Crate;//Obstacle
+            mapCase[2,1] = Case.Obstacle;//Obstacle
         }
         else
         {
             for (int x = 0; x < xVal; x++)
             {
-                mapList.Add(new List<Bloc>());
+                mapBlocs.Add(new List<Bloc>());
                 for (int y = 0; y < yVal; y++)
                 {
                     try
                     {
-                        blocId[x,y] = maps[usedMapId].blocId[x].ligne[y];
+                        mapCase[x,y] = maps[usedMapId].blocId[x].ligne[y];
                     }
                     catch (Exception e)
                     {
-                        blocId[x,y] = Case.Empty;
+                        mapCase[x,y] = Case.Empty;
                     }
                     
-                    mapList[x].Add(null);
+                    mapBlocs[x].Add(null);
                 }
             }
         }
@@ -111,58 +103,58 @@ public class MapGenerator : MonoBehaviour
                 Vector3 tilePos = new Vector3(x, 0, y);
                 //GameObject newTile = Instantiate(blocsPrefab[(int)blocId[x,y]], tilePos, Quaternion.Euler(Vector3.right * 90));
                 //newTile.transform.parent = map;
-                if (blocId[x, y] == Case.Crate)
+                if (mapCase[x, y] == Case.Crate)
                 {
-                    mapList[x][y] = new BlocCrate();
-                    BlocCrate crate = mapList[x][y] as BlocCrate;
+                    mapBlocs[x][y] = new BlocCrate();
+                    BlocCrate crate = mapBlocs[x][y] as BlocCrate;
                     crate.blocUnderMeGO = blocsPrefab[(int)Case.Empty];
                     crate.blocUnderMe = new Bloc();
                     crate.blocUnderMe.ID = 0;
                 }
-                else if(blocId[x,y] == Case.CrateOnTarget)
+                else if(mapCase[x,y] == Case.CrateOnTarget)
                 {
-                    mapList[x][y] = new BlocCrate();
-                    BlocCrate crate = mapList[x][y] as BlocCrate;
+                    mapBlocs[x][y] = new BlocCrate();
+                    BlocCrate crate = mapBlocs[x][y] as BlocCrate;
                     crate.blocUnderMeGO = blocsPrefab[(int)Case.TargetCrate];
                     crate.onTarget = true;
                     
                     crate.blocUnderMe = new Bloc();
                     crate.blocUnderMe.ID = (int)Case.TargetCrate;
                 }
-                else if(blocId[x, y]== Case.Obstacle)
+                else if(mapCase[x, y]== Case.Obstacle)
                 {
-                    mapList[x][y] = new Bloc();
-                    mapList[x][y].wall = true;
+                    mapBlocs[x][y] = new Bloc();
+                    mapBlocs[x][y].wall = true;
                 }
                 else
                 {
-                    mapList[x][y] = new Bloc();
+                    mapBlocs[x][y] = new Bloc();
                 }
                 
-                if (blocId[x, y] == Case.CrateOnTarget)
+                if (mapCase[x, y] == Case.CrateOnTarget)
                 {
-                    mapList[x][y].myGo = blocsPrefab[(int)Case.Crate];
-                    mapList[x][y].ID = (int)blocId[x, y];
-                    mapList[x][y].Spawn();
-                    mapList[x][y].myGo.transform.position = tilePos;
-                    mapList[x][y].myGo.transform.parent = map;
-                    BlocCrate crate = mapList[x][y] as BlocCrate;
+                    mapBlocs[x][y].myGo = blocsPrefab[(int)Case.Crate];
+                    mapBlocs[x][y].ID = (int)mapCase[x, y];
+                    mapBlocs[x][y].Spawn();
+                    mapBlocs[x][y].myGo.transform.position = tilePos;
+                    mapBlocs[x][y].myGo.transform.parent = map;
+                    BlocCrate crate = mapBlocs[x][y] as BlocCrate;
                     crate.ChangeColor();
                 }
 
                 else
                 {
-                    mapList[x][y].myGo = blocsPrefab[(int)blocId[x, y]];
-                    mapList[x][y].ID = (int)blocId[x, y];
-                    mapList[x][y].Spawn();
-                    mapList[x][y].myGo.transform.position = tilePos;
-                    mapList[x][y].myGo.transform.parent = map;
+                    mapBlocs[x][y].myGo = blocsPrefab[(int)mapCase[x, y]];
+                    mapBlocs[x][y].ID = (int)mapCase[x, y];
+                    mapBlocs[x][y].Spawn();
+                    mapBlocs[x][y].myGo.transform.position = tilePos;
+                    mapBlocs[x][y].myGo.transform.parent = map;
                 }
             }
         }
     }
 
-    public void GenerateStateMap(ref Dictionary<IntList, State> mapState)
+    public void GenerateStateMap(ref Dictionary<IntList, State> mapState, ref Case[,] mapCase)
     {
         //Generate state map
         IntList key;
@@ -174,7 +166,7 @@ public class MapGenerator : MonoBehaviour
                 State newState = new Gridcase();
                 key = new IntList();
 
-                switch(GetBlocId(new Vector2Int(x, y)))
+                switch(mapCase[x, y])
                 {
                     case Case.Empty:
                     case Case.Start:

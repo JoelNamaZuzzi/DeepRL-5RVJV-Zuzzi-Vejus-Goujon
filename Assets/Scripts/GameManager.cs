@@ -15,8 +15,8 @@ public class GameManager : MonoBehaviour
     //AI
     private Dictionary<IntList, State> _mapState;
     // MAP
-    private List<List<Bloc>> _map;
-    
+    private List<List<Bloc>> _mapBlocs;
+    private MapGenerator.Case[,] _map;
     enum AlgoApply
     {
         ValueIterator,
@@ -26,13 +26,15 @@ public class GameManager : MonoBehaviour
     void Awake()
     {
         _mapState = new Dictionary<IntList, State>();
-        _map = new List<List<Bloc>>();
+        _mapBlocs = new List<List<Bloc>>();
+        
     }
     
     void Start()
     {
-        mapGenerator.GenerateMap(ref _map);
-        mapGenerator.GenerateStateMap(ref _mapState);
+        _map = new MapGenerator.Case[mapGenerator.xVal, mapGenerator.yVal];
+        mapGenerator.GenerateMap(ref _mapBlocs, ref _map);
+        mapGenerator.GenerateStateMap(ref _mapState, ref _map);
         player.Init(new Vector3(0, 1, 0));
         
         switch(selectedAlgorithm)
@@ -60,7 +62,7 @@ public class GameManager : MonoBehaviour
     private void ApplyStateMap()
     {
         Vector3 currentPlayerPosition = player.GetPlayerPosition();
-        Bloc currentBloc = _map[(int) currentPlayerPosition[0]][(int) currentPlayerPosition[2]];
+        Bloc currentBloc = _mapBlocs[(int) currentPlayerPosition[0]][(int) currentPlayerPosition[2]];
         float bestScore;
         int xPosition = 0;
         int yPosition = 0;
