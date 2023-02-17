@@ -24,6 +24,7 @@ public class ValueIteration
              {
                  float maxA = -1;
                  int indexActionSelected = -1;
+                 Debug.Log("nb Actions possible : "+kvp.Value.actions.Count + "ID Current action : " + kvp.Value.currentAction);
                  IntList nextState = kvp.Value.actions[kvp.Value.currentAction].Act(kvp.Key);
                  foreach (var actions in kvp.Value.actions)
                  {
