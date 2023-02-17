@@ -27,19 +27,19 @@ public class Player : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.UpArrow))
         {
-            Up();
+            MovePlayer(new Vector3(0, 0, 1));
         }
         if (Input.GetKeyDown(KeyCode.DownArrow))
         {
-            Down();
+            MovePlayer(new Vector3(0, 0, -1));
         }
         if (Input.GetKeyDown(KeyCode.RightArrow))
         {
-            Right();
+            MovePlayer(new Vector3(1, 0, 0));
         }
         if (Input.GetKeyDown(KeyCode.LeftArrow))
         {
-            Left();
+            MovePlayer(new Vector3(-1, 0, 0));
         }
     }
     public void Right()
