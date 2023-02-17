@@ -1,19 +1,15 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
 using UnityEngine;
+using System;
 
 using AI_Utils;
-using ScriptableObject;
 using Utils;
 
 public class MapGenerator : MonoBehaviour
 {
     public Vector2Int mapSize;
-    private int xVal;
-    private int yVal;
+    public int xVal;
+    public int yVal;
     private Case[,] blocId;
     private Transform bloc;
     public List<GameObject> blocsPrefab;
@@ -125,8 +121,8 @@ public class MapGenerator : MonoBehaviour
                 }
                 else if(blocId[x,y] == Case.CrateOnTarget)
                 {
-                    blocs[x][y] = new BlocCrate();
-                    BlocCrate crate = blocs[x][y] as BlocCrate;
+                    mapList[x][y] = new BlocCrate();
+                    BlocCrate crate = mapList[x][y] as BlocCrate;
                     crate.blocUnderMeGO = blocsPrefab[(int)Case.TargetCrate];
                     crate.onTarget = true;
                     
@@ -145,22 +141,22 @@ public class MapGenerator : MonoBehaviour
                 
                 if (blocId[x, y] == Case.CrateOnTarget)
                 {
-                    blocs[x][y].myGo = blocsPrefab[(int)Case.Crate];
-                    blocs[x][y].ID = (int)blocId[x, y];
-                    blocs[x][y].Spawn();
-                    blocs[x][y].myGo.transform.position = tilePos;
-                    blocs[x][y].myGo.transform.parent = map;
-                    BlocCrate crate = blocs[x][y] as BlocCrate;
+                    mapList[x][y].myGo = blocsPrefab[(int)Case.Crate];
+                    mapList[x][y].ID = (int)blocId[x, y];
+                    mapList[x][y].Spawn();
+                    mapList[x][y].myGo.transform.position = tilePos;
+                    mapList[x][y].myGo.transform.parent = map;
+                    BlocCrate crate = mapList[x][y] as BlocCrate;
                     crate.ChangeColor();
                 }
 
                 else
                 {
-                    blocs[x][y].myGo = blocsPrefab[(int)blocId[x, y]];
-                    blocs[x][y].ID = (int)blocId[x, y];
-                    blocs[x][y].Spawn();
-                    blocs[x][y].myGo.transform.position = tilePos;
-                    blocs[x][y].myGo.transform.parent = map;
+                    mapList[x][y].myGo = blocsPrefab[(int)blocId[x, y]];
+                    mapList[x][y].ID = (int)blocId[x, y];
+                    mapList[x][y].Spawn();
+                    mapList[x][y].myGo.transform.position = tilePos;
+                    mapList[x][y].myGo.transform.parent = map;
                 }
             }
         }
