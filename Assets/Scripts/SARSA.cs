@@ -10,8 +10,19 @@ public class SARSA
       for (int episode = 0; episode < nbEpisode; episode++)
       {
          // On recupere la zone initial
-         // a changé quand on aura les coordoné de la zone de debut
          int x = 0, y = 0;
+         for (int i = 0; i < mapState.Count; i++)
+         {
+            for (int j = 0; j < mapState[i].Count; j++)
+            {
+               if (mapState[i][j].start)
+               {
+                  x = i;
+                  y = j;
+               }
+            }
+         }
+         
          int actionInit = EpsilonGreedy(mapState,x,y,epsilon);
          //Initialisation des valeurs de Q(s,a) à 0 
          foreach (var liststate in mapState)
@@ -43,8 +54,8 @@ public class SARSA
             x = nextState.x;
             y = nextState.y;
             actionInit = nextAction;
-            // a changé quand on aura les coordoné de la zone de fin
-            if (x == 3 && y == 3)
+            
+            if (mapState[x][y].final)
             {
                break;
             }

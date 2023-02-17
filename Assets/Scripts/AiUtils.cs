@@ -13,11 +13,16 @@ namespace AI_Utils
         public int currentAction;
         public float reward = 0;
         public bool final = false;
+        public bool start = false;
 
         //For MonteCarlo
         public int visited = 0;//Counts the number of time this state was visited in a episode
         public List<float> totalScore = new List<float>();//Score accumulated by exploitation and exploartion pour chaque action
         public List<float> timePlayed = new List<float>();
+        
+        //For SARSA
+
+        public MapGenerator.Case typeBlock; 
     }
 
     public class Gridcase: State
@@ -43,6 +48,15 @@ namespace AI_Utils
     {
         public StepGoal()
         {
+            reward = 1;
+        }
+    }
+    
+    public class StartCase: Gridcase
+    {
+        public StartCase()
+        {
+            start = true;
             reward = 1;
         }
     }
