@@ -5,14 +5,14 @@ using AI_Utils;
 
 public class SARSA 
 {
-   static void SarsaAlgorithm(ref List<List<State>> mapState , float gamma ,int nbEpisode, float epsilon, float tauxDapprentissage)
+  public static void SarsaAlgorithm(ref List<List<State>> mapState , float gamma ,int nbEpisode, float epsilon, float tauxDapprentissage)
    {
       for (int episode = 0; episode < nbEpisode; episode++)
       {
          // On recupere la zone initial
          // a changé quand on aura les coordoné de la zone de debut
          int x = 0, y = 0;
-         int actionInit = Random.Range(0,mapState[x][y].actions.Count);
+         int actionInit = EpsilonGreedy(mapState,x,y,epsilon);
          //Initialisation des valeurs de Q(s,a) à 0 
          foreach (var liststate in mapState)
          {
@@ -30,10 +30,9 @@ public class SARSA
             // On exectue l'action initiale
             Vector2Int nextState = mapState[x][y].actions[actionInit].Act(new Vector2Int(x, y));
             float reward = mapState[x][y].reward;
-            float nextScore = mapState[nextState.x][nextState.y].actions.Count;
-            
+
             // On utilise l'algo d'exploration/exploitation 
-            int nextAction = EpsilonGreedy(mapState,mapState[x][y],nextState,epsilon);;
+            int nextAction = EpsilonGreedy(mapState,x,y,epsilon);
             
             //mise a jour de Q(s,a)
 
@@ -55,12 +54,13 @@ public class SARSA
    }
 
    // Algorithme d'exploration / exploitation
-   public static int EpsilonGreedy(List<List<State>> mapState,State state,Vector2Int PosState, float epsilon)
+   public static int EpsilonGreedy(List<List<State>> mapState,int x , int y , float epsilon)
    {
+      State actuState = mapState[x][y];
       if (Random.Range(0f, 1f) < epsilon)
       {
          //Exploration
-         return Random.Range(0, state.actions.Count);
+         return Random.Range(0, actuState.actions.Count);
       }
       else
       {
@@ -68,9 +68,9 @@ public class SARSA
          float bestScore = float.MinValue;
          int bestAction = 0;
 
-         for (int i = 0; i < state.actions.Count; i++)
+         for (int i = 0; i < actuState.actions.Count; i++)
          {
-            Vector2Int nextStateCoordonee = state.actions[i].Act(new Vector2Int(PosState.x, PosState.y));
+            Vector2Int nextStateCoordonee = actuState.actions[i].Act(new Vector2Int(x,y));
             State nextState = mapState[nextStateCoordonee.x][nextStateCoordonee.y];
 
             if (nextState.score > bestScore)
