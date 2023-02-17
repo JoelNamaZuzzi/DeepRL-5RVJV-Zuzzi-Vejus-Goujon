@@ -54,8 +54,10 @@ public class MapGenerator : MonoBehaviour
         cam.transform.position = new Vector3(xVal/2, (xVal+yVal)*0.65f , yVal/2);
     }
 
-    public void GenerateMap(ref List<List<Bloc>> mapList)
+    public void GenerateMap(ref List<List<Bloc>> mapList, out IntList startState)
     {
+        startState = new IntList();
+
         string name = "GeneratedMap";
         if (transform.Find(name))
         {
@@ -79,11 +81,17 @@ public class MapGenerator : MonoBehaviour
 
             blocId[0,0] = Case.Start;//Début
             blocId[3,3] = Case.Goal;//Fin
-            blocId[1,2] = Case.Crate;//Obstacle
+            blocId[1,2] = Case.Obstacle;//Obstacle
             blocId[2,1] = Case.Obstacle;//Obstacle
+
+            startState.Add(0);
+            startState.Add(0);
         }
         else
         {
+            startState.Add(0);
+            startState.Add(0);
+
             for (int x = 0; x < xVal; x++)
             {
                 mapList.Add(new List<Bloc>());
@@ -118,6 +126,9 @@ public class MapGenerator : MonoBehaviour
                     crate.blocUnderMeGO = blocsPrefab[(int)Case.Empty];
                     crate.blocUnderMe = new Bloc();
                     crate.blocUnderMe.ID = 0;
+
+                    startState.Add(x);
+                    startState.Add(y);
                 }
                 else if(blocId[x,y] == Case.CrateOnTarget)
                 {
@@ -128,6 +139,9 @@ public class MapGenerator : MonoBehaviour
                     
                     crate.blocUnderMe = new Bloc();
                     crate.blocUnderMe.ID = (int)Case.TargetCrate;
+
+                    startState.Add(x);
+                    startState.Add(y);
                 }
                 else if(blocId[x, y]== Case.Obstacle)
                 {
@@ -136,6 +150,12 @@ public class MapGenerator : MonoBehaviour
                 }
                 else
                 {
+                    if(blocId[x, y] == Case.Start)
+                    {
+                        startState[0] = x;
+                        startState[1] = y;
+                    }
+
                     mapList[x][y] = new Bloc();
                 }
                 

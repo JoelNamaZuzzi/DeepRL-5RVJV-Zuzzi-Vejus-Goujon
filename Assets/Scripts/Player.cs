@@ -42,4 +42,24 @@ public class Player : MonoBehaviour
             MovePlayer(new Vector3(-1, 0, 0));
         }
     }
+    public void Right()
+    {
+        Debug.LogWarningFormat("Right");
+        _playerInstantiate.transform.position = _playerInstantiate.transform.position + new Vector3(1, 0, 0);
+    }
+    public void Left()
+    {
+        Debug.LogWarningFormat("Left");
+        _playerInstantiate.transform.position = _playerInstantiate.transform.position + new Vector3(-1, 0, 0);
+    }
+    public void Up()
+    {
+        Debug.LogWarningFormat("Up");
+        _playerInstantiate.transform.position = _playerInstantiate.transform.position + new Vector3(0, 0, 1);
+    }
+    public void Down()
+    {
+        Debug.LogWarningFormat("Down");
+        _playerInstantiate.transform.position = _playerInstantiate.transform.position + new Vector3(0, 0, -1);
+    }
 }

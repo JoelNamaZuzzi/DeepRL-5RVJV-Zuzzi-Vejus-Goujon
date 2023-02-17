@@ -14,6 +14,7 @@ public class GameManager : MonoBehaviour
     
     //AI
     private Dictionary<IntList, State> _mapState;
+    private IntList currentState;
     // MAP
     private List<List<Bloc>> _map;
     
@@ -31,7 +32,7 @@ public class GameManager : MonoBehaviour
     
     void Start()
     {
-        mapGenerator.GenerateMap(ref _map);
+        mapGenerator.GenerateMap(ref _map, out currentState);
         mapGenerator.GenerateStateMap(ref _mapState);
         player.Init(new Vector3(0, 1, 0));
         
@@ -41,6 +42,7 @@ public class GameManager : MonoBehaviour
                 ValueIteration.ValueIterationAlgorithm(ref _mapState,0.5f);
                 break;
             case AlgoApply.PolicyIteration:
+                PolicyIteration.Iteration(ref _mapState, 0.1f, 0.5f);
                 break;
         }
     }
@@ -59,29 +61,25 @@ public class GameManager : MonoBehaviour
 
     private void ApplyStateMap()
     {
-        Vector3 currentPlayerPosition = player.GetPlayerPosition();
-        Bloc currentBloc = _map[(int) currentPlayerPosition[0]][(int) currentPlayerPosition[2]];
-        float bestScore;
-        int xPosition = 0;
-        int yPosition = 0;
-        
-        for (int x = -1; x < 2; x++)
-        {
-            for (int y = -1; y < 2; y++)
-            {
-                int nextX = (int) currentPlayerPosition[0];
-                int nextY = (int) currentPlayerPosition[2];
+        State current = _mapState[currentState];
 
-                if (nextX + x >= 0 && nextX + x < mapGenerator.xVal
-                    && nextY + y >= 0 && nextY + y < mapGenerator.yVal
-                    && x != 0 && y != 0)
-                {
-                    // if (_map[nextX + x][nextY + y] )
-                    // {
-                    //     
-                    // }
-                }
-            }
+        switch(current.actions[current.currentAction].GetId())
+        {
+            case "right":
+                player.Right();
+                break;
+
+            case "left":
+                player.Left();
+                break;
+
+            case "down":
+                player.Down();
+                break;
+                
+            case "up":
+                player.Up();
+                break;
         }
     }
 }
