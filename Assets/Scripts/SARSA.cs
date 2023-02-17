@@ -7,60 +7,49 @@ using Utils;
 
 public class SARSA 
 {
-  public static void SarsaAlgorithm(ref Dictionary<IntList, State> mapState , float gamma ,int nbEpisode, float epsilon, float tauxDapprentissage)
+  public static void SarsaAlgorithm(ref Dictionary<IntList, State> mapState ,KeyValuePair<IntList,State> start,  float gamma ,int nbEpisode, float epsilon, float tauxDapprentissage)
    {
-      // for (int episode = 0; episode < nbEpisode; episode++)
-      // {
-      //    // On recupere la zone initial
-      //    int x = 0, y = 0;
-      //    for (int i = 0; i < mapState.Count; i++)
-      //    {
-      //       for (int j = 0; j < mapState[i].Count; j++)
-      //       {
-      //          if (mapState[i][j].start)
-      //          {
-      //             x = i;
-      //             y = j;
-      //          }
-      //       }
-      //    }
-      //    int actionInit = EpsilonGreedy(mapState,x,y,epsilon);
-      //    //Initialisation des valeurs de Q(s,a) à 0 
-      //    foreach (var liststate in mapState)
-      //    {
-      //       foreach (var state in liststate)
-      //       {
-      //          foreach (var action in state.actions)
-      //          {
-      //             action.q = 0f;
-      //          }
-      //       }
-      //    }
-      //    while (true)
-      //    {
-      //       // On exectue l'action initiale
-      //       IntList nextState = mapState[x][y].actions[actionInit].Act(new IntList(x, y));
-      //       float reward = mapState[x][y].reward;
-
-      //       // On utilise l'algo d'exploration/exploitation 
-      //       int nextAction = EpsilonGreedy(mapState,x,y,epsilon);
-            
-      //       //mise a jour de Q(s,a)
-
-      //       float currentQ = mapState[x][y].actions[actionInit].q;
-      //       float nextQ = mapState[nextState.x][nextState.y].actions[nextAction].q;
-      //       mapState[x][y].actions[actionInit].q = currentQ + tauxDapprentissage * (reward + gamma * nextQ - currentQ);
-
-      //       x = nextState.x;
-      //       y = nextState.y;
-      //       actionInit = nextAction;
-            
-      //       if (mapState[x][y].final)
-      //       {
-      //          break;
-      //       }
-      //    }
-      // }
+   //    for (int episode = 0; episode < nbEpisode; episode++)
+   //    {
+   //       int x = 0, y = 0;
+//
+   //       
+   //       int actionInit = EpsilonGreedy(mapState,x,y,epsilon);
+   //       //Initialisation des valeurs de Q(s,a) à 0 
+   //       foreach (KeyValuePair<IntList,State> state in mapState)
+   //       { 
+   //          foreach (var action in state.Value.actions)
+   //          {
+   //             action.q = 0f;
+   //          }
+   //       }
+   //       
+   //       while (true)
+   //       {
+   //          
+   //          // On exectue l'action initiale
+   //          State nextState = mapState.Keys.[x][y].actions[actionInit].Act(new IntList(x, y));
+   //          float reward = mapState[x][y].reward;
+//
+   //          // On utilise l'algo d'exploration/exploitation 
+   //          int nextAction = EpsilonGreedy(mapState,x,y,epsilon);
+   //       
+   //          //mise a jour de Q(s,a)
+//
+   //          float currentQ = mapState[x][y].actions[actionInit].q;
+   //          float nextQ = mapState[nextState.x][nextState.y].actions[nextAction].q;
+   //          mapState[x][y].actions[actionInit].q = currentQ + tauxDapprentissage * (reward + gamma * nextQ - currentQ);
+//
+   //          x = nextState.x;
+   //          y = nextState.y;
+   //          actionInit = nextAction;
+   //       
+   //          if (mapState[curentState].final)
+   //          {
+   //             break;
+   //          }
+   //       }
+   //    }
    }
 
    // Algorithme d'exploration / exploitation
