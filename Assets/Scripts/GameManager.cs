@@ -28,7 +28,6 @@ public class GameManager : MonoBehaviour
     {
         _mapState = new Dictionary<IntList, State>();
         _mapBlocs = new List<List<Bloc>>();
-        
     }
     
     void Start()
@@ -37,7 +36,7 @@ public class GameManager : MonoBehaviour
         mapGenerator.GenerateMap(ref _mapBlocs, ref _map, out currentState);
         mapGenerator.GenerateStateMap(ref _mapState, ref _map);
 
-        player.Init(new Vector3(0, 1, 0));
+        player.Init(new Vector3(mapGenerator.startPosition.x, 1, mapGenerator.startPosition.y));
         
         switch(selectedAlgorithm)
         {

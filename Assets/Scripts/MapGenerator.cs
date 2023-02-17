@@ -19,6 +19,8 @@ public class MapGenerator : MonoBehaviour
     public int usedMapId;
     public bool useMap;
 
+    public Vector2Int startPosition;
+    
     public enum Case
     {
         Empty,
@@ -145,6 +147,8 @@ public class MapGenerator : MonoBehaviour
                     {
                         startState[0] = x;
                         startState[1] = y;
+                        startPosition.x = x;
+                        startPosition.y = y;
                     }
 
                     mapBlocs[x][y] = new Bloc();
