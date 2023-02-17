@@ -6,6 +6,7 @@ using System.Linq;
 using UnityEngine;
 
 using AI_Utils;
+using ScriptableObject;
 using Utils;
 
 public class MapGenerator : MonoBehaviour
@@ -16,10 +17,7 @@ public class MapGenerator : MonoBehaviour
     private Case[,] blocId;
     private Transform bloc;
     public List<GameObject> blocsPrefab;
-    public List<List<Bloc>> blocs = new List<List<Bloc>>();
 
-    //AI
-    private Dictionary<IntList, State> mapState = new Dictionary<IntList, State>();
 
     [Header("Map Loading")]
     public List<Map> maps;
@@ -42,11 +40,6 @@ public class MapGenerator : MonoBehaviour
         return blocId[pos.x, pos.y];
     }
 
-    public Dictionary<IntList, State> GetMapState()
-    {
-        return mapState;
-    }
-
     public void Awake()
     {
         if (useMap)
@@ -60,12 +53,11 @@ public class MapGenerator : MonoBehaviour
             yVal = mapSize.y;
         }
         blocId = new Case[xVal, yVal];
-        GenerateMap();
         GameObject cam = GameObject.FindGameObjectsWithTag("MainCamera")[0];
         cam.transform.position = new Vector3(xVal/2, (xVal+yVal)*0.65f , yVal/2);
     }
 
-    public void GenerateMap()
+    public void GenerateMap(ref List<List<Bloc>> mapList)
     {
         string name = "GeneratedMap";
         if (transform.Find(name))
@@ -80,11 +72,11 @@ public class MapGenerator : MonoBehaviour
         {
             for (int x = 0; x < xVal; x++)
             {
-                blocs.Add(new List<Bloc>());
+                mapList.Add(new List<Bloc>());
                 for (int y = 0; y < yVal; y++)
                 {
                     blocId[x,y] = Case.Empty;
-                    blocs[x].Add(null);
+                    mapList[x].Add(null);
                 }
             }
 
@@ -97,7 +89,7 @@ public class MapGenerator : MonoBehaviour
         {
             for (int x = 0; x < xVal; x++)
             {
-                blocs.Add(new List<Bloc>());
+                mapList.Add(new List<Bloc>());
                 for (int y = 0; y < yVal; y++)
                 {
                     try
@@ -109,7 +101,7 @@ public class MapGenerator : MonoBehaviour
                         blocId[x,y] = Case.Empty;
                     }
                     
-                    blocs[x].Add(null);
+                    mapList[x].Add(null);
                 }
             }
         }
@@ -124,29 +116,32 @@ public class MapGenerator : MonoBehaviour
                 //newTile.transform.parent = map;
                 if ((int)blocId[x, y] == 4)
                 {
-                    blocs[x][y] = new BlocCrate();
-                    BlocCrate crate = blocs[x][y] as BlocCrate;
+                    mapList[x][y] = new BlocCrate();
+                    BlocCrate crate = mapList[x][y] as BlocCrate;
                     crate.blocUnderMeGO = blocsPrefab[(int)Case.Empty];
                     crate.prefabTarget = blocsPrefab[(int)Case.TargetCrate];
                     crate.blocUnderMe = new Bloc();
                     crate.blocUnderMe.ID = 0;
                 }else if((int)blocId[x, y]==3)
                 {
-                    blocs[x][y] = new Bloc();
-                    blocs[x][y].wall = true;
+                    mapList[x][y] = new Bloc();
+                    mapList[x][y].wall = true;
                 }
                 else
                 {
-                    blocs[x][y] = new Bloc();
+                    mapList[x][y] = new Bloc();
                 }
-                blocs[x][y].myGo = blocsPrefab[(int)blocId[x, y]];
-                blocs[x][y].ID = (int)blocId[x, y];
-                blocs[x][y].Spawn();
-                blocs[x][y].myGo.transform.position = tilePos;
-                blocs[x][y].myGo.transform.parent = map;
+                mapList[x][y].myGo = blocsPrefab[(int)blocId[x, y]];
+                mapList[x][y].ID = (int)blocId[x, y];
+                mapList[x][y].Spawn();
+                mapList[x][y].myGo.transform.position = tilePos;
+                mapList[x][y].myGo.transform.parent = map;
             }
         }
+    }
 
+    public void GenerateStateMap(ref Dictionary<IntList, State> mapState)
+    {
         //Generate state map
         IntList key;
 
@@ -159,18 +154,18 @@ public class MapGenerator : MonoBehaviour
 
                 switch(GetBlocId(new Vector2Int(x, y)))
                 {
-                    case MapGenerator.Case.Empty:
-                    case MapGenerator.Case.Start:
-                       //newState = new Gridcase();
-                       break; 
+                    case Case.Empty:
+                    case Case.Start:
+                        //newState = new Gridcase();
+                        break; 
 
-                    case MapGenerator.Case.Goal:
-                       newState = new FinalGoal();
-                       break; 
+                    case Case.Goal:
+                        newState = new FinalGoal();
+                        break; 
 
-                    case MapGenerator.Case.Obstacle:
-                       newState = new Frobidden();
-                       break; 
+                    case Case.Obstacle:
+                        newState = new Frobidden();
+                        break; 
                 }
 
                 key.Add(x);
@@ -196,27 +191,27 @@ public class MapGenerator : MonoBehaviour
                 key[0] = x-1;
                 key[1] = y;
 
-                AddAction(key, new Left(), mapSize, currentState);
+                AddAction(key, new Left(), mapState, mapSize, currentState);
 
                 key[0] = x + 1;
                 key[1] = y;
 
-                AddAction(key, new Right(), mapSize, currentState);
+                AddAction(key, new Right(), mapState, mapSize, currentState);
 
                 key[0] = x;
                 key[1] = y - 1;
 
-                AddAction(key, new Down(), mapSize, currentState);
+                AddAction(key, new Down(), mapState, mapSize, currentState);
 
                 key[0] = x;
                 key[1] = y + 1;
 
-                AddAction(key, new Up(), mapSize, currentState);
+                AddAction(key, new Up(), mapState, mapSize, currentState);
             }
         }
     }
 
-    public void AddAction(IntList key, AI_Utils.Action a, Vector2Int mapSize, State currentState)
+    public void AddAction(IntList key, AI_Utils.Action a,Dictionary<IntList, State> mapState, Vector2Int mapSize, State currentState)
     {
         //Check that everything is in bound of the map
         for(int i = 0; i < key.Count; i+=2)
