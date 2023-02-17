@@ -9,6 +9,17 @@ namespace Utils
         public double RealNumber { get; set; }
         public double ImaginaryUnit { get; set; }
 
+        public IntList(): base()
+        {}
+
+        public IntList(IntList other)
+        {
+            for(int i = 0; i < other.Count; i++)
+            {
+                Add(other[i]);
+            }
+        }
+
         public override bool Equals(object obj)
         {
             return Equals(obj as IntList);

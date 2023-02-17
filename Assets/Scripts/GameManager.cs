@@ -44,7 +44,12 @@ public class GameManager : MonoBehaviour
                 ValueIteration.ValueIterationAlgorithm(ref _mapState,0.5f);
                 break;
             case AlgoApply.PolicyIteration:
-               // PolicyIteration.Iteration(ref _mapState, 0.1f, 0.5f);
+                PolicyIteration.Iteration(ref _mapState, 0.1f, 0.5f);
+
+                // foreach(KeyValuePair<IntList, State> kvp in _mapState)
+                // {
+                //     Debug.Log(kvp.Key[0] + " " + kvp.Key[1] + " " + kvp.Value.score);
+                // }
                 break;
         }
     }
@@ -83,5 +88,8 @@ public class GameManager : MonoBehaviour
                 player.Up();
                 break;
         }
+
+        currentState = current.actions[current.currentAction].Act(currentState);
+        
     }
 }
