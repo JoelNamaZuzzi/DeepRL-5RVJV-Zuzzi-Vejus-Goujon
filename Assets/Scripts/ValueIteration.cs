@@ -9,7 +9,7 @@ using Utils;
 public class ValueIteration 
 {
     // algorithme de Value Iteration
-    static void ValueIterationAlgorithm(ref Dictionary<IntList, State> mapState , float gamma)
+    public static void ValueIterationAlgorithm(ref Dictionary<IntList, State> mapState , float gamma)
     {
          float delta = float.MinValue;
          foreach (var kvp in mapState)

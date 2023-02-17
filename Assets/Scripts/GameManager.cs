@@ -38,7 +38,7 @@ public class GameManager : MonoBehaviour
         switch(selectedAlgorithm)
         {
             case AlgoApply.ValueIterator:
-                ValueIteration.ValueIterationAlgorithm(ref _mapState);
+                ValueIteration.ValueIterationAlgorithm(ref _mapState,0.5f);
                 break;
             case AlgoApply.PolicyIteration:
                 break;
