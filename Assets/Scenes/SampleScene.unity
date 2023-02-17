@@ -356,7 +356,8 @@ MonoBehaviour:
   maps:
   - {fileID: 11400000, guid: 1c3245e0c0150474abd801024206eb69, type: 2}
   - {fileID: 11400000, guid: 7c06ab8507c8b9142b9ffe9c5c2f52f4, type: 2}
-  usedMapId: 1
+  - {fileID: 11400000, guid: 23eb863f98145ff4cb03e33299131e8f, type: 2}
+  usedMapId: 0
   useMap: 1
 --- !u!1 &1368697368
 GameObject:

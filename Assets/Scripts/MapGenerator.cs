@@ -32,7 +32,8 @@ public class MapGenerator : MonoBehaviour
     Goal,
     Obstacle,
     Crate,
-    TargetCrate
+    TargetCrate,
+    CrateOnTarget
     }
 
     public Case GetBlocId(Vector2Int pos)
@@ -114,15 +115,25 @@ public class MapGenerator : MonoBehaviour
                 Vector3 tilePos = new Vector3(x, 0, y);
                 //GameObject newTile = Instantiate(blocsPrefab[(int)blocId[x,y]], tilePos, Quaternion.Euler(Vector3.right * 90));
                 //newTile.transform.parent = map;
-                if ((int)blocId[x, y] == 4)
+                if (blocId[x, y] == Case.Crate)
                 {
                     mapList[x][y] = new BlocCrate();
                     BlocCrate crate = mapList[x][y] as BlocCrate;
                     crate.blocUnderMeGO = blocsPrefab[(int)Case.Empty];
-                    crate.prefabTarget = blocsPrefab[(int)Case.TargetCrate];
                     crate.blocUnderMe = new Bloc();
                     crate.blocUnderMe.ID = 0;
-                }else if((int)blocId[x, y]==3)
+                }
+                else if(blocId[x,y] == Case.CrateOnTarget)
+                {
+                    blocs[x][y] = new BlocCrate();
+                    BlocCrate crate = blocs[x][y] as BlocCrate;
+                    crate.blocUnderMeGO = blocsPrefab[(int)Case.TargetCrate];
+                    crate.onTarget = true;
+                    
+                    crate.blocUnderMe = new Bloc();
+                    crate.blocUnderMe.ID = (int)Case.TargetCrate;
+                }
+                else if(blocId[x, y]== Case.Obstacle)
                 {
                     mapList[x][y] = new Bloc();
                     mapList[x][y].wall = true;
@@ -131,11 +142,26 @@ public class MapGenerator : MonoBehaviour
                 {
                     mapList[x][y] = new Bloc();
                 }
-                mapList[x][y].myGo = blocsPrefab[(int)blocId[x, y]];
-                mapList[x][y].ID = (int)blocId[x, y];
-                mapList[x][y].Spawn();
-                mapList[x][y].myGo.transform.position = tilePos;
-                mapList[x][y].myGo.transform.parent = map;
+                
+                if (blocId[x, y] == Case.CrateOnTarget)
+                {
+                    blocs[x][y].myGo = blocsPrefab[(int)Case.Crate];
+                    blocs[x][y].ID = (int)blocId[x, y];
+                    blocs[x][y].Spawn();
+                    blocs[x][y].myGo.transform.position = tilePos;
+                    blocs[x][y].myGo.transform.parent = map;
+                    BlocCrate crate = blocs[x][y] as BlocCrate;
+                    crate.ChangeColor();
+                }
+
+                else
+                {
+                    blocs[x][y].myGo = blocsPrefab[(int)blocId[x, y]];
+                    blocs[x][y].ID = (int)blocId[x, y];
+                    blocs[x][y].Spawn();
+                    blocs[x][y].myGo.transform.position = tilePos;
+                    blocs[x][y].myGo.transform.parent = map;
+                }
             }
         }
     }
