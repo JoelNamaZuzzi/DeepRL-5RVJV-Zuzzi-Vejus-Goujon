@@ -46,7 +46,7 @@ public class MapGenerator : MonoBehaviour
         cam.transform.position = new Vector3(xVal/2, (xVal+yVal)*0.65f , yVal/2);
     }
 
-    public void GenerateMap(ref List<List<Bloc>> mapList, ref Case[,] mapCase, out IntList startState)
+    public void GenerateMap(ref List<List<Bloc>> mapBlocs, ref Case[,] mapCase, out IntList startState)
     {
         startState = new IntList();
 
@@ -147,7 +147,7 @@ public class MapGenerator : MonoBehaviour
                         startState[1] = y;
                     }
 
-                    mapList[x][y] = new Bloc();
+                    mapBlocs[x][y] = new Bloc();
                 }
                 
                 if (mapCase[x, y] == Case.CrateOnTarget)

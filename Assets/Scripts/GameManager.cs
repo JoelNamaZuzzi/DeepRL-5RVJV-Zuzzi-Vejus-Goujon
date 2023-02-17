@@ -34,7 +34,7 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         _map = new MapGenerator.Case[mapGenerator.xVal, mapGenerator.yVal];
-        mapGenerator.GenerateMap(ref _map, , ref _map, out currentState);
+        mapGenerator.GenerateMap(ref _mapBlocs, ref _map, out currentState);
         mapGenerator.GenerateStateMap(ref _mapState, ref _map);
 
         player.Init(new Vector3(0, 1, 0));
