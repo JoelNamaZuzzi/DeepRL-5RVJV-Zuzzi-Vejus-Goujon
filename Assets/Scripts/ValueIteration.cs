@@ -24,10 +24,13 @@ public class ValueIteration
              {
                  float maxA = -1;
                  int indexActionSelected = -1;
-                 Debug.Log("nb Actions possible : "+kvp.Value.actions.Count + "ID Current action : " + kvp.Value.currentAction);
+                // Debug.Log("nb Actions possible : "+kvp.Value.actions.Count + "ID Current action : " + kvp.Value.currentAction);
                  IntList nextState = kvp.Value.actions[kvp.Value.currentAction].Act(kvp.Key);
+                // Debug.Log("Next stage id " + nextState[0] +" " + nextState[1]);
                  foreach (var actions in kvp.Value.actions)
                  {
+                     
+                     Debug.Log("Next state : " + nextState );
                      float tmp = kvp.Value.reward + mapState[nextState].score * gamma;
                      if (maxA < tmp)
                      {
@@ -59,7 +62,9 @@ public class ValueIteration
                      bestAction = a;
                  }
              } 
+             
              kvp.Value.currentAction = bestAction;
+             Debug.Log("best action : " + kvp.Value.actions[bestAction].GetId());
          }
     }
 }
