@@ -17,6 +17,8 @@ public class MapGenerator : MonoBehaviour
     private Transform bloc;
     public List<GameObject> blocsPrefab;
     public List<List<Bloc>> blocs = new List<List<Bloc>>();
+
+    //AI
     private Dictionary<IntList, State> mapState = new Dictionary<IntList, State>();
 
     [Header("Map Loading")]
@@ -38,6 +40,11 @@ public class MapGenerator : MonoBehaviour
     public Case GetBlocId(Vector2Int pos)
     {
         return blocId[pos.x, pos.y];
+    }
+
+    public Dictionary<IntList, State> GetMapState()
+    {
+        return mapState;
     }
 
     public void Awake()
