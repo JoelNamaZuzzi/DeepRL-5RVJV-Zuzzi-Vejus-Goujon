@@ -7,7 +7,6 @@ using Utils;
 
 public class MapGenerator : MonoBehaviour
 {
-    public Vector2Int mapSize;
     public int xVal;
     public int yVal;
     private Transform bloc;
@@ -34,16 +33,8 @@ public class MapGenerator : MonoBehaviour
 
     public void Awake()
     {
-        if (useMap)
-        {
-            xVal = maps[usedMapId].mapSize.x;
-            yVal = maps[usedMapId].mapSize.y;
-        }
-        else
-        {
-            xVal = mapSize.x;
-            yVal = mapSize.y;
-        }
+        xVal = maps[usedMapId].mapSize.x;
+        yVal = maps[usedMapId].mapSize.y;
         GameObject cam = GameObject.FindGameObjectsWithTag("MainCamera")[0];
         cam.transform.position = new Vector3(xVal/2, (xVal+yVal)*0.65f , yVal/2);
     }
@@ -181,9 +172,9 @@ public class MapGenerator : MonoBehaviour
         //Generate state map
         IntList key;
 
-        for(int x = 0; x < mapSize.x; x++)
+        for(int x = 0; x < xVal; x++)
         {
-            for(int y = 0; y < mapSize.y; y++)
+            for(int y = 0; y < yVal; y++)
             {
                 State newState = new Gridcase();
                 key = new IntList();
@@ -215,9 +206,9 @@ public class MapGenerator : MonoBehaviour
         key.Add(0);
         key.Add(0);
 
-        for(int x = 0; x < mapSize.x; x++)
+        for(int x = 0; x < xVal; x++)
         {
-            for(int y = 0; y < mapSize.y; y++)
+            for(int y = 0; y < yVal; y++)
             {
                 key[0] = x;
                 key[1] = y;
@@ -227,22 +218,22 @@ public class MapGenerator : MonoBehaviour
                 key[0] = x-1;
                 key[1] = y;
 
-                AddAction(key, new Left(), mapState, mapSize, currentState);
+                AddAction(key, new Left(), mapState, new Vector2Int(xVal, yVal), currentState);
 
                 key[0] = x + 1;
                 key[1] = y;
 
-                AddAction(key, new Right(), mapState, mapSize, currentState);
+                AddAction(key, new Right(), mapState, new Vector2Int(xVal, yVal), currentState);
 
                 key[0] = x;
                 key[1] = y - 1;
 
-                AddAction(key, new Down(), mapState, mapSize, currentState);
+                AddAction(key, new Down(), mapState, new Vector2Int(xVal, yVal), currentState);
 
                 key[0] = x;
                 key[1] = y + 1;
 
-                AddAction(key, new Up(), mapState, mapSize, currentState);
+                AddAction(key, new Up(), mapState, new Vector2Int(xVal, yVal), currentState);
             }
         }
     }

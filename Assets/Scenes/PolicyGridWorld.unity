@@ -437,5 +437,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   player: {fileID: 1368697369}
   mapGenerator: {fileID: 1208316254}
-  selectedAlgorithm: 0
-  awaitTimer: 2
+  selectedAlgorithm: 1
+  awaitTimer: 0.25
