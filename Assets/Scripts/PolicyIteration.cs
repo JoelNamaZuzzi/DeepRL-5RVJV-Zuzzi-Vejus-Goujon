@@ -23,10 +23,7 @@ public class PolicyIteration
                     IntList nextState = kvp.Value.actions[kvp.Value.currentAction].Act(kvp.Key);
 
                     kvp.Value.futureScore = kvp.Value.reward + mapState[nextState].score * gamma; 
-                    //Debug.Log(nextState[0] + " " + nextState[1] + " " + kvp.Key[0] + " " + kvp.Key[1]);
                 }
-
-                
 
                 delta = Mathf.Max(delta, kvp.Value.score - kvp.Value.futureScore);
             }
