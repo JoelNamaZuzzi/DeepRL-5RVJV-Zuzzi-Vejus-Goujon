@@ -68,7 +68,7 @@ public class MonteCarlo : MonoBehaviour
             //Retropropagation
             float reward = 0;
 
-            for(int i = states.Count-2; i >= 0; i++)
+            for(int i = states.Count-2; i >= 0; i--)
             {
                 reward += mapState[states[i+1]].reward;
 
@@ -88,13 +88,23 @@ public class MonteCarlo : MonoBehaviour
                 {
                     for(int a = 0; a < kvp.Value.actions.Count; a++)
                     {
-                        kvp.Value.vs[a] = kvp.Value.totalScore[a] / kvp.Value.timePlayed[a]; 
+                        if(kvp.Value.timePlayed[a] == 0)
+                        {
+                            kvp.Value.vs[a] = 0;
+                        }else{
+                            kvp.Value.vs[a] = kvp.Value.totalScore[a] / kvp.Value.timePlayed[a]; 
+                        }
                     }
                 }
 
                 //Update policy loop
                 foreach(KeyValuePair<IntList, State> kvp in mapState)
                 {
+                    if(kvp.Value.vs.Count == 0)
+                    {
+                        continue;
+                    }
+
                     int bestAction = 0;
                     float bestScore = kvp.Value.vs[0];
 
