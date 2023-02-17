@@ -46,8 +46,10 @@ public class MapGenerator : MonoBehaviour
         cam.transform.position = new Vector3(xVal/2, (xVal+yVal)*0.65f , yVal/2);
     }
 
-    public void GenerateMap(ref List<List<Bloc>> mapBlocs, ref Case[,] mapCase)
+    public void GenerateMap(ref List<List<Bloc>> mapList, ref Case[,] mapCase, out IntList startState)
     {
+        startState = new IntList();
+
         string name = "GeneratedMap";
         if (transform.Find(name))
         {
@@ -68,14 +70,19 @@ public class MapGenerator : MonoBehaviour
                     mapBlocs[x].Add(null);
                 }
             }
-
             mapCase[0,0] = Case.Start;//Début
             mapCase[3,3] = Case.Goal;//Fin
-            mapCase[1,2] = Case.Crate;//Obstacle
+            mapCase[1,2] = Case.Obstacle;//Obstacle
             mapCase[2,1] = Case.Obstacle;//Obstacle
+
+            startState.Add(0);
+            startState.Add(0);
         }
         else
         {
+            startState.Add(0);
+            startState.Add(0);
+
             for (int x = 0; x < xVal; x++)
             {
                 mapBlocs.Add(new List<Bloc>());
@@ -110,6 +117,9 @@ public class MapGenerator : MonoBehaviour
                     crate.blocUnderMeGO = blocsPrefab[(int)Case.Empty];
                     crate.blocUnderMe = new Bloc();
                     crate.blocUnderMe.ID = 0;
+
+                    startState.Add(x);
+                    startState.Add(y);
                 }
                 else if(mapCase[x,y] == Case.CrateOnTarget)
                 {
@@ -120,6 +130,9 @@ public class MapGenerator : MonoBehaviour
                     
                     crate.blocUnderMe = new Bloc();
                     crate.blocUnderMe.ID = (int)Case.TargetCrate;
+
+                    startState.Add(x);
+                    startState.Add(y);
                 }
                 else if(mapCase[x, y]== Case.Obstacle)
                 {
@@ -128,7 +141,13 @@ public class MapGenerator : MonoBehaviour
                 }
                 else
                 {
-                    mapBlocs[x][y] = new Bloc();
+                    if(mapCase[x, y] == Case.Start)
+                    {
+                        startState[0] = x;
+                        startState[1] = y;
+                    }
+
+                    mapList[x][y] = new Bloc();
                 }
                 
                 if (mapCase[x, y] == Case.CrateOnTarget)

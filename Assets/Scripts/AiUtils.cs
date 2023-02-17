@@ -50,18 +50,6 @@ namespace AI_Utils
 
         public Gridcase()
         {
-            actions.Add(new Right());
-            actions.Add(new Left());
-            actions.Add(new Down());
-            actions.Add(new Up());
-
-            for(int i = 0; i < 4; i++)
-            {
-                totalScore.Add(0);
-                timePlayed.Add(0);
-                visited.Add(0);
-            }
-
             currentAction = Random.Range(0, actions.Count);
         }
     }
