@@ -16,17 +16,36 @@ namespace AI_Utils
         public bool start = false;
 
         //For MonteCarlo
-        public int visited = 0;//Counts the number of time this state was visited in a episode
+        public List<int> visited = new List<int>();//Counts the number of time this state was visited in a episode
         public List<float> totalScore = new List<float>();//Score accumulated by exploitation and exploartion pour chaque action
         public List<float> timePlayed = new List<float>();
+
+        public List<float> vs = new List<float>();//V(s)
+
+        public void AddAction(Action a)
+        {
+            actions.Add(a);
+            totalScore.Add(0);
+            timePlayed.Add(0);
+            visited.Add(0);
+            vs.Add(0);
+        }
+
+        public abstract string GetId();
         
         //For SARSA
 
         public MapGenerator.Case typeBlock; 
+
     }
 
     public class Gridcase: State
     {
+        public override string GetId()
+        {
+            return "Gridcase";
+        }
+
         public Gridcase()
         {
             actions.Add(new Right());
@@ -38,6 +57,7 @@ namespace AI_Utils
             {
                 totalScore.Add(0);
                 timePlayed.Add(0);
+                visited.Add(0);
             }
 
             currentAction = Random.Range(0, actions.Count);
@@ -46,6 +66,11 @@ namespace AI_Utils
 
     public class StepGoal: Gridcase
     {
+        public override string GetId()
+        {
+            return "StepGoal";
+        }
+
         public StepGoal()
         {
             reward = 1;
@@ -63,6 +88,11 @@ namespace AI_Utils
 
     public class FinalGoal: Gridcase
     {
+        public override string GetId()
+        {
+            return "FinalGoal";
+        }
+
         public FinalGoal()
         {
             reward = 10;
@@ -72,6 +102,11 @@ namespace AI_Utils
 
     public class Frobidden: Gridcase
     {
+        public override string GetId()
+        {
+            return "Frobidden";
+        }
+
         public Frobidden()
         {
             reward = -100;

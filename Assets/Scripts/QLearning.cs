@@ -3,9 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using AI_Utils;
 
-public class SARSA 
+public class QLearning  
 {
-  public static void SarsaAlgorithm(ref List<List<State>> mapState , float gamma ,int nbEpisode, float epsilon, float tauxDapprentissage)
+   public static void Qlearning(ref List<List<State>> mapState, float gamma, int nbEpisode, float epsilon,
+      float tauxDapprentissage)
    {
       for (int episode = 0; episode < nbEpisode; episode++)
       {
@@ -22,7 +23,7 @@ public class SARSA
                }
             }
          }
-         int actionInit = EpsilonGreedy(mapState,x,y,epsilon);
+         int actionInit = SARSA.EpsilonGreedy(mapState,x,y,epsilon);
          //Initialisation des valeurs de Q(s,a) à 0 
          foreach (var liststate in mapState)
          {
@@ -34,6 +35,7 @@ public class SARSA
                }
             }
          }
+         
          while (true)
          {
             // On exectue l'action initiale
@@ -41,13 +43,23 @@ public class SARSA
             float reward = mapState[x][y].reward;
 
             // On utilise l'algo d'exploration/exploitation 
-            int nextAction = EpsilonGreedy(mapState,x,y,epsilon);
+            int nextAction = SARSA.EpsilonGreedy(mapState,x,y,epsilon);
             
             //mise a jour de Q(s,a)
-
+      
             float currentQ = mapState[x][y].actions[actionInit].q;
             float nextQ = mapState[nextState.x][nextState.y].actions[nextAction].q;
-            mapState[x][y].actions[actionInit].q = currentQ + tauxDapprentissage * (reward + gamma * nextQ - currentQ);
+            
+            float maxQ = -1;
+
+            foreach (var actionnext in mapState[nextState.x][nextState.y].actions)
+            {
+               foreach (var action in mapState[x][y].actions)
+               {
+                  maxQ = Mathf.Max(maxQ, actionnext.q - action.q);
+               }
+            }
+            mapState[x][y].actions[actionInit].q = currentQ + tauxDapprentissage * (reward + gamma * maxQ);
 
             x = nextState.x;
             y = nextState.y;
@@ -58,36 +70,6 @@ public class SARSA
                break;
             }
          }
-      }
-   }
-
-   // Algorithme d'exploration / exploitation
-   public static int EpsilonGreedy(List<List<State>> mapState,int x , int y , float epsilon)
-   {
-      State actuState = mapState[x][y];
-      if (Random.Range(0f, 1f) < epsilon)
-      {
-         //Exploration
-         return Random.Range(0, actuState.actions.Count);
-      }
-      else
-      {
-         // Exploitation
-         float bestScore = float.MinValue;
-         int bestAction = 0;
-
-         for (int i = 0; i < actuState.actions.Count; i++)
-         {
-            Vector2Int nextStateCoordonee = actuState.actions[i].Act(new Vector2Int(x,y));
-            State nextState = mapState[nextStateCoordonee.x][nextStateCoordonee.y];
-
-            if (nextState.score > bestScore)
-            {
-               bestScore = nextState.score;
-               bestAction = i;
-            }
-         }
-         return bestAction;
       }
    }
 }
