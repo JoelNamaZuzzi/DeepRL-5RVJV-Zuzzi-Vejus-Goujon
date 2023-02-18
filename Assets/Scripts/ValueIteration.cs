@@ -15,7 +15,7 @@ public class ValueIteration
 
          foreach (var kvp in mapState)
          {
-             kvp.Value.score = 0;
+                kvp.Value.score = 0;
          }
 
          
@@ -23,11 +23,11 @@ public class ValueIteration
          {
              foreach (KeyValuePair<IntList, State> kvp in mapState)
              {
-
                  if(kvp.Value.final == true || kvp.Value.actions.Count == 0)
                 {
                     kvp.Value.score = kvp.Value.reward + kvp.Value.score * gamma;
                     kvp.Value.futureScore = kvp.Value.reward + kvp.Value.score * gamma;
+                    kvp.Value.score = kvp.Value.futureScore;
                 }
                 else
                 {
@@ -54,7 +54,10 @@ public class ValueIteration
 
                     delta = Mathf.Max(delta, Mathf.Abs(kvp.Value.score - kvp.Value.futureScore));
                 }
-                
+             }
+
+            foreach (KeyValuePair<IntList, State> kvp in mapState)
+             {
                 kvp.Value.score = kvp.Value.futureScore;
              }
 
@@ -63,6 +66,7 @@ public class ValueIteration
          // On créer le chemin avec les meilleurs actions 
          foreach (KeyValuePair<IntList, State> kvp in mapState)
          {
+
              int bestAction = 0;
              float bestScore = -1;
 

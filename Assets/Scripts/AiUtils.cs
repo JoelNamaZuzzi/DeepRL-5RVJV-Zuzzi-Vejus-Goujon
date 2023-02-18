@@ -72,7 +72,6 @@ namespace AI_Utils
         public StartCase()
         {
             start = true;
-            reward = 1;
         }
     }
 
