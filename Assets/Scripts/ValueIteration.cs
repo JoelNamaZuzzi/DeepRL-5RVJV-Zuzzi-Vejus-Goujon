@@ -18,9 +18,7 @@ public class ValueIteration
              kvp.Value.score = 0;
          }
 
-         int debugStop = 0;
- 
-         //On boucle pour minimiser la valeur de Delta   
+         
          do
          {
              foreach (KeyValuePair<IntList, State> kvp in mapState)
@@ -28,14 +26,15 @@ public class ValueIteration
 
                  if(kvp.Value.final == true || kvp.Value.actions.Count == 0)
                 {
-                    kvp.Value.futureScore = kvp.Value.reward;
+                    kvp.Value.score = kvp.Value.reward + kvp.Value.score * gamma;
+                    kvp.Value.futureScore = kvp.Value.reward + kvp.Value.score * gamma;
                 }
                 else
                 {
                     float maxA = -1;
                     int indexActionSelected = -1;
 
-                    IntList nextState = kvp.Value.actions[kvp.Value.currentAction].Act(kvp.Key);
+                    IntList nextState = new IntList();
 
                     for (int a = 0; a < kvp.Value.actions.Count; a++)
                     {
@@ -49,19 +48,17 @@ public class ValueIteration
                             indexActionSelected = a;
                         }
                     }
-                    
+
                     kvp.Value.futureScore = maxA;
                     kvp.Value.currentAction = indexActionSelected;
-                }
 
-                delta = Mathf.Max(delta, Mathf.Abs(kvp.Value.score - kvp.Value.futureScore));
-                Debug.Log(delta);
+                    delta = Mathf.Max(delta, Mathf.Abs(kvp.Value.score - kvp.Value.futureScore));
+                }
+                
                 kvp.Value.score = kvp.Value.futureScore;
              }
 
-             debugStop++;
-
-         } while (delta >= theta && debugStop < 10);
+         } while (delta < theta);
          
          // On créer le chemin avec les meilleurs actions 
          foreach (KeyValuePair<IntList, State> kvp in mapState)
@@ -83,7 +80,7 @@ public class ValueIteration
              } 
              
              kvp.Value.currentAction = bestAction;
-             Debug.Log("best action : " + kvp.Value.actions[bestAction].GetId());
+             //Debug.Log("best action : " + kvp.Value.actions[bestAction].GetId());
          }
     }
 }
