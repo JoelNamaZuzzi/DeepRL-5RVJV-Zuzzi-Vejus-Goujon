@@ -183,7 +183,7 @@ public class MapGenerator : MonoBehaviour
                 {
                     case Case.Empty:
                     case Case.Start:
-                        //newState = new Gridcase();
+                        newState = new StartCase();
                         break; 
 
                     case Case.Goal:

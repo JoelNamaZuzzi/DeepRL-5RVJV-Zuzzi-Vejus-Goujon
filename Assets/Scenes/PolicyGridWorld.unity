@@ -345,7 +345,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 38a8ec7e12534234aac26a1682829760, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mapSize: {x: 4, y: 4}
   xVal: 0
   yVal: 0
   blocsPrefab:
@@ -437,5 +436,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   player: {fileID: 1368697369}
   mapGenerator: {fileID: 1208316254}
-  selectedAlgorithm: 1
+  selectedAlgorithm: 2
   awaitTimer: 0.25

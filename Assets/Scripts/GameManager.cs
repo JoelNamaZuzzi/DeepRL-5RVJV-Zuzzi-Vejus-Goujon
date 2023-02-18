@@ -23,6 +23,8 @@ public class GameManager : MonoBehaviour
         ValueIterator,
         PolicyIteration,
         Montecarlo,
+        Sarsa,
+        Qlearning
     }
     
     void Awake()
@@ -49,6 +51,12 @@ public class GameManager : MonoBehaviour
                 break;
             case AlgoApply.Montecarlo:
                 MonteCarlo.Simulation(ref _mapState, 30, 1000, true, new IntList(currentState), 0.4f, true);
+                break;
+            case AlgoApply.Sarsa:
+                SARSA.SarsaAlgorithm(ref _mapState,0.5f,1000,0.4f,0.01f);
+                break;
+            case AlgoApply.Qlearning:
+                QLearning.Qlearning(ref _mapState,0.5f,1000,0.4f,0.01f);
                 break;
         }
     }

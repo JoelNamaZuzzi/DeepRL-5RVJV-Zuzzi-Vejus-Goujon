@@ -6,14 +6,21 @@ using Utils;
 
 public class QLearning  
 {
-   public static void Qlearning(ref Dictionary<IntList, State> mapState,KeyValuePair<IntList,State> start, float gamma, int nbEpisode, float epsilon,
+   public static void Qlearning(ref Dictionary<IntList, State> mapState, float gamma, int nbEpisode, float epsilon,
       float tauxDapprentissage)
    {
        for (int episode = 0; episode < nbEpisode; episode++)
        {
-          IntList Xy = start.Key;
-          KeyValuePair<IntList, State> curentState = start;
-
+          IntList Xy = new IntList();
+          KeyValuePair<IntList, State> curentState = new KeyValuePair<IntList, State>();
+          foreach (var kvp in mapState)
+          {
+             if (kvp.Value.start)
+             {
+                curentState = kvp;
+                Xy = kvp.Key;
+             }
+          }
           int actionInit = SARSA.EpsilonGreedy(mapState,Xy,epsilon);
           //Initialisation des valeurs de Q(s,a) à 0 
           foreach (KeyValuePair<IntList,State> state in mapState)

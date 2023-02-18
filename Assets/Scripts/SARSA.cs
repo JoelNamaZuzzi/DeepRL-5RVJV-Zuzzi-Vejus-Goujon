@@ -7,13 +7,21 @@ using Utils;
 
 public class SARSA 
 {
-  public static void SarsaAlgorithm(ref Dictionary<IntList, State> mapState ,KeyValuePair<IntList,State> start,  float gamma ,int nbEpisode, float epsilon, float tauxDapprentissage)
+  public static void SarsaAlgorithm(ref Dictionary<IntList, State> mapState ,  float gamma ,int nbEpisode, float epsilon, float tauxDapprentissage)
    {
        for (int episode = 0; episode < nbEpisode; episode++)
        {
-          IntList xy = start.Key;
-
-          KeyValuePair<IntList, State> curentState = start;
+          IntList xy = new IntList();
+          KeyValuePair<IntList, State> curentState = new KeyValuePair<IntList, State>();
+          foreach (var kvp in mapState)
+          {
+             if (kvp.Value.start)
+             {
+                curentState = kvp;
+                xy = kvp.Key;
+             }
+          }
+          
           int actionInit = EpsilonGreedy(mapState,xy,epsilon);
           
           //Initialisation des valeurs de Q(s,a) à 0 
