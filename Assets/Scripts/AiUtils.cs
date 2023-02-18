@@ -112,7 +112,7 @@ namespace AI_Utils
         
         //For SARSA
 
-        public float q;
+        public float q = 0;
     }
 
     public class Right: Action

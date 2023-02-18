@@ -9,6 +9,16 @@ public class SARSA
 {
   public static void SarsaAlgorithm(ref Dictionary<IntList, State> mapState ,  float gamma ,int nbEpisode, float epsilon, float tauxDapprentissage)
    {
+      
+      //Initialisation des valeurs de Q(s,a) à 0 
+      foreach (KeyValuePair<IntList,State> state in mapState)
+      { 
+         foreach (var action in state.Value.actions)
+         {
+            action.q = 0f;
+         }
+      }
+      
        for (int episode = 0; episode < nbEpisode; episode++)
        {
           IntList xy = new IntList();
@@ -22,36 +32,32 @@ public class SARSA
              }
           }
           
-          int actionInit = EpsilonGreedy(mapState,xy,epsilon);
+          int currentAction = EpsilonGreedy(mapState,xy,epsilon);
           
-          //Initialisation des valeurs de Q(s,a) à 0 
-          foreach (KeyValuePair<IntList,State> state in mapState)
-          { 
-             foreach (var action in state.Value.actions)
-             {
-                action.q = 0f;
-             }
-          }
-         
           int iteration = 0;
           while (true ||iteration == 1000000)
           {
              // On exectue l'action initiale
              
-             IntList nextState = curentState.Value.actions[actionInit].Act(curentState.Key);
-             float reward = curentState.Value.reward;
+             IntList nextStateCoord = curentState.Value.actions[currentAction].Act(curentState.Key);
+             State nextState = mapState[nextStateCoord];
+             
 
              // On utilise l'algo d'exploration/exploitation 
              int nextAction = EpsilonGreedy(mapState,xy,epsilon);
           
              //mise a jour de Q(s,a)
 
-             float currentQ = curentState.Value.actions[actionInit].q;
-             float nextQ = mapState[nextState].actions[nextAction].q;
-             curentState.Value.actions[actionInit].q = currentQ + tauxDapprentissage * (reward + gamma * nextQ - currentQ);
+             float currentQ = curentState.Value.actions[currentAction].q;
+             Debug.Log("nextState.actions.count : " + nextState.actions.Count);
+             Debug.Log("nextAction : " + nextAction);
+             float nextQ = nextState.actions[nextAction].q;
+             float reward = nextState.reward;
+             curentState.Value.actions[currentAction].q = currentQ + tauxDapprentissage * (reward + gamma * nextQ - currentQ);
              
-             xy = nextState;
-             actionInit = nextAction;
+             xy = nextStateCoord;
+             curentState = new KeyValuePair<IntList, State>(nextStateCoord,nextState);
+             currentAction = nextAction;
 
              if (curentState.Value.final)
              {

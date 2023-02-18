@@ -17,8 +17,6 @@ public class ValueIteration
          {
                 kvp.Value.score = 0;
          }
-
-         
          do
          {
              foreach (KeyValuePair<IntList, State> kvp in mapState)
