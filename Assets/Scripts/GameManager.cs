@@ -48,7 +48,7 @@ public class GameManager : MonoBehaviour
                 PolicyIteration.Iteration(ref _mapState, 0.01f, 0.5f);
                 break;
             case AlgoApply.Montecarlo:
-                MonteCarlo.Simulation(ref _mapState, 30, 1000, true, new IntList(currentState), 0.4f, true);
+                MonteCarlo.Simulation(ref _mapState, 60, 5000, true, 0.8f, true, true);
                 break;
         }
     }
