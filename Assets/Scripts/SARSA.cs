@@ -35,7 +35,7 @@ public class SARSA
           int currentAction = EpsilonGreedy(mapState,xy,epsilon);
           
           int iteration = 0;
-          while (true ||iteration == 1000000)
+          while (iteration == 1000000)
           {
              // On exectue l'action initiale
              
@@ -44,6 +44,7 @@ public class SARSA
              
 
              // On utilise l'algo d'exploration/exploitation 
+             xy = nextStateCoord;
              int nextAction = EpsilonGreedy(mapState,xy,epsilon);
           
              //mise a jour de Q(s,a)
@@ -55,7 +56,7 @@ public class SARSA
              float reward = nextState.reward;
              curentState.Value.actions[currentAction].q = currentQ + tauxDapprentissage * (reward + gamma * nextQ - currentQ);
              
-             xy = nextStateCoord;
+             
              curentState = new KeyValuePair<IntList, State>(nextStateCoord,nextState);
              currentAction = nextAction;
 
@@ -75,15 +76,18 @@ public class SARSA
        if (Random.Range(0f, 1f) < epsilon)
        {
           //Exploration
+          Debug.Log("explore");
           return Random.Range(0, actuState.actions.Count);
        }
        else
        {
+         Debug.Log("exploit");
+
           // Exploitation
-          float bestScore = float.MinValue;
+          float bestScore = mapState[actuState.actions[0].Act(Xy)].score;
           int bestAction = 0;
 
-          for (int i = 0; i < actuState.actions.Count; i++)
+          for (int i = 1; i < actuState.actions.Count; i++)
           {
              IntList nextStateCoordonee = actuState.actions[i].Act(Xy);
              State nextState = mapState[nextStateCoordonee];
