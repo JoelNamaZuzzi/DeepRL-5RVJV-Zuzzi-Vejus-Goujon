@@ -25,9 +25,7 @@ public class ValueIteration
              {
                  if(kvp.Value.final == true || kvp.Value.actions.Count == 0)
                 {
-                    kvp.Value.score = kvp.Value.reward + kvp.Value.score * gamma;
                     kvp.Value.futureScore = kvp.Value.reward + kvp.Value.score * gamma;
-                    kvp.Value.score = kvp.Value.futureScore;
                 }
                 else
                 {
