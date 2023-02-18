@@ -7,8 +7,10 @@ using Utils;
 
 public class MonteCarlo : MonoBehaviour
 {
-    static public void Simulation(ref Dictionary<IntList, State> mapState, int maxTurn, int nEpisode, bool everyVisit, IntList pos, float epsilon, bool onPolicy)
+    static public void Simulation(ref Dictionary<IntList, State> mapState, int maxTurn, float nEpisode, bool everyVisit, float epsilon, bool onPolicy, bool greedyEpsilon)
     {
+        float maxEpsilon = epsilon;
+
         //Set to zero
         foreach(KeyValuePair<IntList, State> kvp in mapState)
         {
@@ -19,9 +21,16 @@ public class MonteCarlo : MonoBehaviour
             }
         }
 
+        IntList currentState = new IntList();
+
         //Episodes loop
-        for(int episode = 0; episode < nEpisode; episode++)
+        for(float episode = 0; episode < nEpisode; episode++)
         {
+            if(greedyEpsilon == true)
+            {
+                epsilon = maxEpsilon * ((nEpisode - episode) / nEpisode);
+            }
+
             //Reset visited count
             foreach(KeyValuePair<IntList, State> kvp in mapState)
             {
@@ -34,7 +43,23 @@ public class MonteCarlo : MonoBehaviour
             List<IntList> states = new List<IntList>();
             List<int> actionTaken = new List<int>();
 
-            IntList currentState = pos;
+            Dictionary<IntList, State>.Enumerator it = mapState.GetEnumerator();
+
+            do{
+                int index = Random.Range(0, mapState.Count);
+
+                it = mapState.GetEnumerator();
+                it.MoveNext();
+
+                for(int i = 0; i < index; i++)
+                {
+                    it.MoveNext();
+                }
+
+                
+            }while(it.Current.Value.final == true);
+
+            currentState = it.Current.Key;
 
             //Generate an episode sequence
             for(int turn = 0; turn < maxTurn; turn++)
