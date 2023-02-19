@@ -35,9 +35,11 @@ public class GameManager : MonoBehaviour
     
     void Start()
     {
+        int nCrate;
+
         _map = new MapGenerator.Case[mapGenerator.xVal, mapGenerator.yVal];
-        mapGenerator.GenerateMap(ref _mapBlocs, ref _map, out currentState);
-        mapGenerator.GenerateStateMap(ref _mapState, ref _map);
+        mapGenerator.GenerateMap(ref _mapBlocs, ref _map, out currentState, out nCrate);
+        mapGenerator.GenerateStateMap(ref _mapState, ref _map, nCrate);
 
         player.Init(new Vector3(mapGenerator.startPosition.x, 1, mapGenerator.startPosition.y));
         

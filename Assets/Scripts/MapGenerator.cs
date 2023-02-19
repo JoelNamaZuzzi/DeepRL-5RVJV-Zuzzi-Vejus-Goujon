@@ -39,9 +39,10 @@ public class MapGenerator : MonoBehaviour
         cam.transform.position = new Vector3(xVal/2, (xVal+yVal)*0.65f , yVal/2);
     }
 
-    public void GenerateMap(ref List<List<Bloc>> mapBlocs, ref Case[,] mapCase, out IntList startState)
+    public void GenerateMap(ref List<List<Bloc>> mapBlocs, ref Case[,] mapCase, out IntList startState, out int nCrate)
     {
         startState = new IntList();
+        nCrate = 0;
 
         string name = "GeneratedMap";
         if (transform.Find(name))
@@ -112,6 +113,7 @@ public class MapGenerator : MonoBehaviour
 
                     startState.Add(x);
                     startState.Add(y);
+                    nCrate++;
                 }
                 else if(mapCase[x,y] == Case.CrateOnTarget)
                 {
@@ -125,6 +127,7 @@ public class MapGenerator : MonoBehaviour
 
                     startState.Add(x);
                     startState.Add(y);
+                    nCrate++;
                 }
                 else if(mapCase[x, y]== Case.Obstacle)
                 {
@@ -167,91 +170,135 @@ public class MapGenerator : MonoBehaviour
         }
     }
 
-    public void GenerateStateMap(ref Dictionary<IntList, State> mapState, ref Case[,] mapCase)
+
+    // for x
+    //     for y
+
+    //     end for
+    // end for
+
+    // for e existing element
+    //     listSize <- list.size
+
+    //     for n existing listSize
+    //         for i existing pair
+    //             if i != pair.size - 1
+    //                 currentList <- create newList in list from list[n]
+    //             else
+    //                 currentList <- list[n]
+    //             end
+
+    //             append pair to currentList
+    //         end for
+    //     end for
+    // end for
+
+    // Add endList to mapstate dictionary, do not add forbidden states
+    // Generate possible actions per state, in a way so that we cannot get into a forbidden state
+    public void GenerateStateMap(ref Dictionary<IntList, State> mapState, ref Case[,] mapCase, int nCrate)
     {
-        //Generate state map
-        IntList key;
+        //Generate all possible pairs
+        List<IntList> pairs = new List<IntList>();
 
         for(int x = 0; x < xVal; x++)
         {
             for(int y = 0; y < yVal; y++)
             {
-                State newState = new Gridcase();
-                key = new IntList();
+                pairs.Add(new IntList());
 
-                switch(mapCase[x, y])
-                {
-                    case Case.Empty:
-                    case Case.Start:
-                        newState = new StartCase();
-                        break; 
-
-                    case Case.Goal:
-                        newState = new FinalGoal();
-                        break; 
-
-                    case Case.Obstacle:
-                        newState = new Frobidden();
-                        break; 
-                }
-
-                key.Add(x);
-                key.Add(y);
-
-                mapState.Add(key, newState);
+                pairs[pairs.Count-1].Add(x);
+                pairs[pairs.Count-1].Add(y);
             }
         }
 
-        key = new IntList();
-        key.Add(0);
-        key.Add(0);
+        //Generate all possible keys
+        List<IntList> keys = new List<IntList>(pairs);
 
-        for(int x = 0; x < xVal; x++)
+        //keys.EnsureCapacity(Mathf.Pow(pairs.Count, nCrate+1)); Not available in unity C# version
+        int keysSize;
+
+        for(int n = 0; n < nCrate; n++)
         {
-            for(int y = 0; y < yVal; y++)
+            keysSize = keys.Count;
+
+            for(int keyIndex = 0; keyIndex < keysSize; keyIndex++)
             {
-                key[0] = x;
-                key[1] = y;
+                //keys.Add(new IntList(keys[key]));
 
-                State currentState = mapState[key];
+                for(int p = 0; p < pairs.Count; p++)
+                {
+                    IntList currentList = keys[keyIndex];
 
-                key[0] = x-1;
-                key[1] = y;
+                    if(p == pairs.Count-1)
+                    {
+                        currentList = new IntList(keys[keyIndex]);
+                        keys.Add(currentList);
+                    }
 
-                AddAction(key, new Left(), mapState, new Vector2Int(xVal, yVal), currentState);
-
-                key[0] = x + 1;
-                key[1] = y;
-
-                AddAction(key, new Right(), mapState, new Vector2Int(xVal, yVal), currentState);
-
-                key[0] = x;
-                key[1] = y - 1;
-
-                AddAction(key, new Down(), mapState, new Vector2Int(xVal, yVal), currentState);
-
-                key[0] = x;
-                key[1] = y + 1;
-
-                AddAction(key, new Up(), mapState, new Vector2Int(xVal, yVal), currentState);
+                    currentList.AddRange(pairs[p]);
+                }
             }
+        }
+
+        for(int i = 0; i < keys.Count; i++)
+        {
+            State newState = new StandardState();
+            bool forbidden = false;
+
+            switch(mapCase[keys[i][0], keys[i][1]])
+            {
+                case Case.Empty:
+                case Case.Start:
+                    newState = new StartCase();
+                    break; 
+
+                case Case.Goal:
+                    newState = new FinalGoal();
+                    break; 
+
+                case Case.Obstacle:
+                    //newState = new Forbidden();
+                    forbidden = true;
+                    break; 
+            }
+
+            if(forbidden == false)
+            {
+                mapState.Add(keys[i], newState);
+            }
+        }
+
+        foreach(KeyValuePair<IntList, State> kvp in mapState)
+        {
+            Vector2Int move = Vector2Int.zero;
+
+            AddAction(kvp.Key, new Left(), mapState, xVal, yVal);
+
+            AddAction(kvp.Key, new Right(), mapState, xVal, yVal);
+
+            AddAction(kvp.Key, new Down(), mapState, xVal, yVal);
+
+            AddAction(kvp.Key, new Up(), mapState, xVal, yVal);
         }
     }
 
-    public void AddAction(IntList key, AI_Utils.Action a,Dictionary<IntList, State> mapState, Vector2Int mapSize, State currentState)
+    public void AddAction(IntList key, AI_Utils.Action action, Dictionary<IntList, State> mapState, int width, int height)
     {
+        IntList newKey = action.Act(key);
+
         //Check that everything is in bound of the map
         for(int i = 0; i < key.Count; i+=2)
         {
-            if(key[i] < 0 || key[i] >= mapSize.x || key[i+1] < 0 || key[i+1] >= mapSize.y)
+            if(newKey[i] < 0 || newKey[i] >= width || newKey[i+1] < 0 || newKey[i+1] >= height)
             {
                 return;
             }
         }
 
-        if(mapState[key].GetId() == "Gridcase" || mapState[key].GetId() == "StepGoal" || mapState[key].GetId() == "FinalGoal")
+        if(mapState.ContainsKey(newKey) == true)
         {
-            currentState.AddAction(a);
+            Debug.Log(key[0] + " " + key[1] + " " + action.GetId());
+            mapState[key].AddAction(action);
         }
     }
 }

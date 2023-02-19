@@ -56,7 +56,6 @@ public class MonteCarlo : MonoBehaviour
                     it.MoveNext();
                 }
 
-                
             }while(it.Current.Value.final == true);
 
             currentState = it.Current.Key;
@@ -64,7 +63,6 @@ public class MonteCarlo : MonoBehaviour
             //Generate an episode sequence
             for(int turn = 0; turn < maxTurn; turn++)
             {
-                
                 states.Add(currentState);
 
                 if(mapState[currentState].final == true)

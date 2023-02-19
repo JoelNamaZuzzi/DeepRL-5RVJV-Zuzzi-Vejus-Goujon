@@ -41,20 +41,20 @@ namespace AI_Utils
 
     }
 
-    public class Gridcase: State
+    public class StandardState: State
     {
         public override string GetId()
         {
-            return "Gridcase";
+            return "StandardState";
         }
 
-        public Gridcase()
+        public StandardState()
         {
             currentAction = Random.Range(0, actions.Count);
         }
     }
 
-    public class StepGoal: Gridcase
+    public class StepGoal: StandardState
     {
         public override string GetId()
         {
@@ -67,7 +67,7 @@ namespace AI_Utils
         }
     }
     
-    public class StartCase: Gridcase
+    public class StartCase: StandardState
     {
         public StartCase()
         {
@@ -75,7 +75,7 @@ namespace AI_Utils
         }
     }
 
-    public class FinalGoal: Gridcase
+    public class FinalGoal: StandardState
     {
         public override string GetId()
         {
@@ -89,14 +89,14 @@ namespace AI_Utils
         }
     }
 
-    public class Frobidden: Gridcase
+    public class Forbidden: StandardState
     {
         public override string GetId()
         {
-            return "Frobidden";
+            return "Forbidden";
         }
 
-        public Frobidden()
+        public Forbidden()
         {
             reward = -100;
             final = true;
