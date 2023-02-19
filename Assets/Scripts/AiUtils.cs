@@ -110,6 +110,27 @@ namespace AI_Utils
 
         public abstract IntList Act(in IntList id);
         
+        static public IntList Move(in IntList id, Vector2Int dir)
+        {
+            IntList newId = new IntList(id);
+
+            newId[0] += dir.x;
+            newId[1] += dir.y;
+
+            //Push the crates
+            for(int i = 2; i < newId.Count; i+=2)
+            {
+                if(newId[0] == newId[i] && newId[1] == newId[i+1])
+                {
+                    newId[i] += dir.x;
+                    newId[i+1] += dir.y;
+                }
+            }
+
+            return newId;
+        }
+
+
         //For SARSA
 
         public float q = 0;
@@ -124,10 +145,7 @@ namespace AI_Utils
 
         public override IntList Act(in IntList id)
         {
-            IntList newId = new IntList(id);
-
-            newId[0]++;
-            return newId;
+            return Move(id, new Vector2Int(1, 0));
         }
     }
 
@@ -140,10 +158,7 @@ namespace AI_Utils
 
         public override IntList Act(in IntList id)
         {
-            IntList newId = new IntList(id);
-
-            newId[0]--;
-            return newId;
+            return Move(id, new Vector2Int(-1, 0));
         }
     }
 
@@ -156,10 +171,7 @@ namespace AI_Utils
 
         public override IntList Act(in IntList id)
         {
-            IntList newId = new IntList(id);
-
-            newId[1]++;
-            return newId;
+            return Move(id, new Vector2Int(0, 1));
         }
     }
 
@@ -172,11 +184,7 @@ namespace AI_Utils
 
         public override IntList Act(in IntList id)
         {
-            IntList newId = new IntList(id);
-
-            newId[1]--;
-            return newId;
+            return Move(id, new Vector2Int(0, -1));
         }
     }
-
 }
