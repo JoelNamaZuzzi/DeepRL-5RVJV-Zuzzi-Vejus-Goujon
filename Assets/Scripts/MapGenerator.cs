@@ -39,10 +39,11 @@ public class MapGenerator : MonoBehaviour
         cam.transform.position = new Vector3(xVal/2, (xVal+yVal)*0.65f , yVal/2);
     }
 
-    public void GenerateMap(ref List<List<Bloc>> mapBlocs, ref Case[,] mapCase, out IntList startState, out int nCrate)
+    public void GenerateMap(ref List<List<Bloc>> mapBlocs, ref Case[,] mapCase, out IntList startState, out int nCrate, out int nTargets)
     {
         startState = new IntList();
         nCrate = 0;
+        nTargets = 0;
 
         string name = "GeneratedMap";
         if (transform.Find(name))
@@ -128,6 +129,7 @@ public class MapGenerator : MonoBehaviour
                     startState.Add(x);
                     startState.Add(y);
                     nCrate++;
+                    nTargets++;
                 }
                 else if(mapCase[x, y]== Case.Obstacle)
                 {
@@ -142,6 +144,11 @@ public class MapGenerator : MonoBehaviour
                         startState[1] = y;
                         startPosition.x = x;
                         startPosition.y = y;
+                    }
+
+                    if(mapCase[x, y] == Case.TargetCrate)
+                    {
+                        nTargets++;
                     }
 
                     mapBlocs[x][y] = new Bloc();
@@ -196,7 +203,7 @@ public class MapGenerator : MonoBehaviour
 
     // Add endList to mapstate dictionary, do not add forbidden states
     // Generate possible actions per state, in a way so that we cannot get into a forbidden state
-    public void GenerateStateMap(ref Dictionary<IntList, State> mapState, ref Case[,] mapCase, int nCrate)
+    public void GenerateStateMap(ref Dictionary<IntList, State> mapState, ref Case[,] mapCase, int nCrate, int nTargets)
     {
         //Generate all possible pairs
         List<IntList> pairs = new List<IntList>();
@@ -205,15 +212,24 @@ public class MapGenerator : MonoBehaviour
         {
             for(int y = 0; y < yVal; y++)
             {
-                pairs.Add(new IntList());
+                if(mapCase[x, y] != Case.Obstacle)
+                {
+                    pairs.Add(new IntList());
 
-                pairs[pairs.Count-1].Add(x);
-                pairs[pairs.Count-1].Add(y);
+                    pairs[pairs.Count-1].Add(x);
+                    pairs[pairs.Count-1].Add(y);
+                }
             }
         }
 
         //Generate all possible keys
-        List<IntList> keys = new List<IntList>(pairs);
+        //new List<IntList>(pairs) would copy refernces to our intList in our new list
+        List<IntList> keys = new List<IntList>();
+
+        for(int p = 0; p < pairs.Count; p++)
+        {
+            keys.Add(new IntList(pairs[p]));
+        }
 
         //keys.EnsureCapacity(Mathf.Pow(pairs.Count, nCrate+1)); Not available in unity C# version
         int keysSize;
@@ -224,41 +240,27 @@ public class MapGenerator : MonoBehaviour
 
             for(int keyIndex = 0; keyIndex < keysSize; keyIndex++)
             {
-                //keys.Add(new IntList(keys[key]));
-
                 for(int p = 0; p < pairs.Count; p++)
                 {
-                    IntList currentList = keys[keyIndex];
+                    int index = keyIndex;
 
-                    if(p == pairs.Count-1)
+                    if(p != pairs.Count-1)
                     {
-                        currentList = new IntList(keys[keyIndex]);
-                        keys.Add(currentList);
+                        keys.Add(new IntList(keys[keyIndex]));
+                        index = keys.Count-1;
                     }
 
-                    currentList.AddRange(pairs[p]);
+                    keys[index].AddRange(new IntList(pairs[p]));
                 }
             }
         }
 
         for(int i = 0; i < keys.Count; i++)
         {
-            if(IsValid(keys[i], ref mapCase) == true)
+            State newState;
+
+            if(CheckState(keys[i], ref mapCase, out newState, nTargets) == true)
             {
-                State newState = new StandardState();
-
-                switch(mapCase[keys[i][0], keys[i][1]])
-                {
-                    case Case.Empty:
-                    case Case.Start:
-                        newState = new StartCase();
-                        break; 
-
-                    case Case.Goal:
-                        newState = new FinalGoal();
-                        break; 
-                }
-
                 mapState.Add(keys[i], newState);
             }
         }
@@ -296,8 +298,12 @@ public class MapGenerator : MonoBehaviour
         }
     }
 
-    public bool IsValid(IntList key, ref Case[,] mapCase)
+    public bool CheckState(IntList key, ref Case[,] mapCase, out State currentState, int nTargets)
     {
+        int score = 0;//Number of crates on target
+
+        currentState = new StandardState();
+
         for(int a = 0; a < key.Count; a+=2)
         {
             //Check for overllaping objects
@@ -305,14 +311,43 @@ public class MapGenerator : MonoBehaviour
             {
                 if(key[a] == key[b] && key[a+1] == key[b+1])
                 {
+                    //Debug.Log(key);
                     return false;
                 }
             }
 
-            //Check for objects overllaping with obstacles
-            if(mapCase[key[a], key[a+1]] == Case.Obstacle)
+
+            //Check for objects overllaping with obstacles or targets
+            switch(mapCase[key[a], key[a+1]])
             {
-                return false;
+                case Case.Obstacle:
+                    //Debug.Log(key);
+                    return false;
+                    break;
+                case Case.CrateOnTarget:
+                case Case.TargetCrate:
+                    if(a > 0)
+                    {
+                        score++;
+                    }
+                    break;
+                case Case.Goal:
+                    if(a == 0)
+                    {
+                        score++;
+                    }
+                    
+                    break;
+            }
+        }
+
+        if(score > 0)
+        {
+            if(score >= nTargets)
+            {
+                currentState = new FinalGoal();
+            }else{
+                currentState = new StepGoal();
             }
         }
 

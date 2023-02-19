@@ -12,7 +12,7 @@ namespace Utils
         public IntList(): base()
         {}
 
-        public IntList(IntList other)
+        public IntList(in IntList other)
         {
             for(int i = 0; i < other.Count; i++)
             {
@@ -48,6 +48,18 @@ namespace Utils
             }
 
             return hash;
+        }
+
+        public override string ToString()
+        {
+            string str = "";
+
+            for(int i = 0; i < Count; i++)
+            {
+                str += this[i] + ", ";
+            }
+
+            return str;
         }
     }
 }
