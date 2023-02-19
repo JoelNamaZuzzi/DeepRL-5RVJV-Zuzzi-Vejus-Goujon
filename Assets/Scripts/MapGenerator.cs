@@ -171,6 +171,7 @@ public class MapGenerator : MonoBehaviour
     }
 
 
+    //GenerateStateMap Pseudo code:
     // for x
     //     for y
 
@@ -242,28 +243,22 @@ public class MapGenerator : MonoBehaviour
 
         for(int i = 0; i < keys.Count; i++)
         {
-            State newState = new StandardState();
-            bool forbidden = false;
-
-            switch(mapCase[keys[i][0], keys[i][1]])
+            if(IsValid(keys[i], ref mapCase) == true)
             {
-                case Case.Empty:
-                case Case.Start:
-                    newState = new StartCase();
-                    break; 
+                State newState = new StandardState();
 
-                case Case.Goal:
-                    newState = new FinalGoal();
-                    break; 
+                switch(mapCase[keys[i][0], keys[i][1]])
+                {
+                    case Case.Empty:
+                    case Case.Start:
+                        newState = new StartCase();
+                        break; 
 
-                case Case.Obstacle:
-                    //newState = new Forbidden();
-                    forbidden = true;
-                    break; 
-            }
+                    case Case.Goal:
+                        newState = new FinalGoal();
+                        break; 
+                }
 
-            if(forbidden == false)
-            {
                 mapState.Add(keys[i], newState);
             }
         }
@@ -297,8 +292,28 @@ public class MapGenerator : MonoBehaviour
 
         if(mapState.ContainsKey(newKey) == true)
         {
-            Debug.Log(key[0] + " " + key[1] + " " + action.GetId());
             mapState[key].AddAction(action);
         }
+    }
+
+    public bool IsValid(IntList key, ref Case[,] mapCase)
+    {
+        for(int a = 0; a < key.Count; a+=2)
+        {
+            for(int b = a + 2; b < key.Count; b+=2)
+            {
+                if(key[a] == key[b] && key[a+1] == key[b+1])
+                {
+                    return false;
+                }
+            }
+
+            if(mapCase[key[a], key[a+1]] == Case.Obstacle)
+            {
+                return false;
+            }
+        }
+
+        return true;
     }
 }
