@@ -22,10 +22,10 @@ public class PolicyIteration
                 }else{
                     IntList nextState = kvp.Value.actions[kvp.Value.currentAction].Act(kvp.Key);
 
-                    kvp.Value.futureScore = kvp.Value.reward + mapState[nextState].score * gamma; 
+                    kvp.Value.futureScore = kvp.Value.reward + mapState[nextState].score * gamma;
                 }
 
-                delta = Mathf.Max(delta, kvp.Value.score - kvp.Value.futureScore);
+                delta = Mathf.Max(delta, Mathf.Abs(kvp.Value.score - kvp.Value.futureScore));
             }
 
             foreach(KeyValuePair<IntList, State> kvp in mapState)

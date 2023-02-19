@@ -300,6 +300,7 @@ public class MapGenerator : MonoBehaviour
     {
         for(int a = 0; a < key.Count; a+=2)
         {
+            //Check for overllaping objects
             for(int b = a + 2; b < key.Count; b+=2)
             {
                 if(key[a] == key[b] && key[a+1] == key[b+1])
@@ -308,6 +309,7 @@ public class MapGenerator : MonoBehaviour
                 }
             }
 
+            //Check for objects overllaping with obstacles
             if(mapCase[key[a], key[a+1]] == Case.Obstacle)
             {
                 return false;
