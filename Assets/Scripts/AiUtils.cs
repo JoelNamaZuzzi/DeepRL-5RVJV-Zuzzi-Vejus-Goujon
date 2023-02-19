@@ -66,14 +66,6 @@ namespace AI_Utils
             reward = 1;
         }
     }
-    
-    public class StartCase: StandardState
-    {
-        public StartCase()
-        {
-            start = true;
-        }
-    }
 
     public class FinalGoal: StandardState
     {

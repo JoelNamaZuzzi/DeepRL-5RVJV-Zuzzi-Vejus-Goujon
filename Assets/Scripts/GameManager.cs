@@ -41,6 +41,7 @@ public class GameManager : MonoBehaviour
         _map = new MapGenerator.Case[mapGenerator.xVal, mapGenerator.yVal];
         mapGenerator.GenerateMap(ref _mapBlocs, ref _map, out currentState, out nCrate, out nTarget);
         mapGenerator.GenerateStateMap(ref _mapState, ref _map, nCrate, nTarget);
+        _mapState[currentState].start = true;
 
         player.Init(new Vector3(mapGenerator.startPosition.x, 1, mapGenerator.startPosition.y));
         
@@ -101,6 +102,5 @@ public class GameManager : MonoBehaviour
         }
 
         currentState = current.actions[current.currentAction].Act(currentState);
-        
     }
 }
