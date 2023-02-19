@@ -56,7 +56,7 @@ public class MonteCarlo : MonoBehaviour
                     it.MoveNext();
                 }
 
-            }while(it.Current.Value.final == true);
+            }while(it.Current.Value.final == true || it.Current.Value.actions.Count == 0);
 
             currentState = it.Current.Key;
 
@@ -65,7 +65,7 @@ public class MonteCarlo : MonoBehaviour
             {
                 states.Add(currentState);
 
-                if(mapState[currentState].final == true)
+                if(mapState[currentState].final == true || mapState[currentState].actions.Count == 0)
                 {
                     break;
                 }
@@ -80,6 +80,11 @@ public class MonteCarlo : MonoBehaviour
                     
                 }else{//Exploitation
                     action = mapState[currentState].currentAction;
+                }
+
+                if(mapState[currentState].actions.Count == 0)
+                {
+                    Debug.Log(currentState);
                 }
 
                 actionTaken.Add(action);

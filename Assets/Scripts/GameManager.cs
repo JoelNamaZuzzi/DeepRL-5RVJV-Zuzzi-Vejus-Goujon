@@ -53,7 +53,7 @@ public class GameManager : MonoBehaviour
                 PolicyIteration.Iteration(ref _mapState, 0.01f, 0.5f);
                 break;
             case AlgoApply.Montecarlo:
-                MonteCarlo.Simulation(ref _mapState, 60, 5000, true, 0.8f, true, true);
+                MonteCarlo.Simulation(ref _mapState, 20, 5000, true, 0.2f, true, false);
                 break;
             case AlgoApply.Sarsa:
                 SARSA.SarsaAlgorithm(ref _mapState,0.5f,1000,0.4f,0.01f);
