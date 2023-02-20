@@ -7,7 +7,8 @@ using Utils;
 
 public class MonteCarlo : MonoBehaviour
 {
-    static public void Simulation(ref Dictionary<IntList, State> mapState, int maxTurn, float nEpisode, bool everyVisit, float epsilon, bool onPolicy, bool greedyEpsilon)
+    static public void Simulation(ref Dictionary<IntList, State> mapState, int maxTurn, float nEpisode, bool everyVisit, 
+    float epsilon, bool onPolicy, bool greedyEpsilon)
     {
         float maxEpsilon = epsilon;
 
