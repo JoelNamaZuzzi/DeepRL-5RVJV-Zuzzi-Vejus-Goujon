@@ -54,19 +54,6 @@ namespace AI_Utils
         }
     }
 
-    public class StepGoal: StandardState
-    {
-        public override string GetId()
-        {
-            return "StepGoal";
-        }
-
-        public StepGoal()
-        {
-            reward = 1;
-        }
-    }
-
     public class FinalGoal: StandardState
     {
         public override string GetId()
@@ -80,21 +67,6 @@ namespace AI_Utils
             final = true;
         }
     }
-
-    public class Forbidden: StandardState
-    {
-        public override string GetId()
-        {
-            return "Forbidden";
-        }
-
-        public Forbidden()
-        {
-            reward = -100;
-            final = true;
-        }
-    }
-
 
     public abstract class Action
     {

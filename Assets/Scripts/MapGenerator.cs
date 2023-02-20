@@ -323,7 +323,6 @@ public class MapGenerator : MonoBehaviour
                 case Case.Obstacle:
                     //Debug.Log(key);
                     return false;
-                    break;
                 case Case.CrateOnTarget:
                 case Case.TargetCrate:
                     if(a > 0)
@@ -341,14 +340,9 @@ public class MapGenerator : MonoBehaviour
             }
         }
 
-        if(score > 0)
+        if(score >= nTargets)
         {
-            if(score >= nTargets)
-            {
-                currentState = new FinalGoal();
-            }else{
-                currentState = new StepGoal();
-            }
+            currentState = new FinalGoal();
         }
 
         return true;
