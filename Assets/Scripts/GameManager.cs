@@ -79,8 +79,8 @@ public class GameManager : MonoBehaviour
 
     private void ApplyStateMap()
     {
-        Debug.Log(string.Join("; ", currentState));
         State current = _mapState[currentState];
+        if(current.final == true) return;
 
         switch(current.actions[current.currentAction].GetId())
         {
