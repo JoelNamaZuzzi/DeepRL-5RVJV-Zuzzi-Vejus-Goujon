@@ -102,7 +102,7 @@ public class SARSA
          Debug.Log("exploit");
 
           // Exploitation
-          float bestScore = mapState[actuState.actions[0].Act(Xy)].score;
+          float bestScore = mapState[Xy].actions[0].q;
           int bestAction = 0;
 
           for (int i = 1; i < actuState.actions.Count; i++)
@@ -110,9 +110,9 @@ public class SARSA
              IntList nextStateCoordonee = actuState.actions[i].Act(Xy);
              State nextState = mapState[nextStateCoordonee];
 
-             if (nextState.score > bestScore)
+             if (nextState.actions[nextState.currentAction].q > bestScore)
              {
-                bestScore = nextState.score;
+                bestScore = nextState.actions[nextState.currentAction].q;
                 bestAction = i;
              }
           }
