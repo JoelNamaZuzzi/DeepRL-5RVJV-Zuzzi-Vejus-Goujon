@@ -15,7 +15,7 @@ public class SARSA
       { 
          foreach (var action in state.Value.actions)
          {
-            action.q = Random.Range(0f,1f);
+            action.q = 0;
          }
       }
       
@@ -33,7 +33,6 @@ public class SARSA
           }
           
           int currentAction = EpsilonGreedy(mapState,xy,epsilon);
-          
           int iteration = 0;
 
 
@@ -55,7 +54,7 @@ public class SARSA
              Debug.Log("nextState.actions.count : " + nextState.actions.Count);
              Debug.Log("nextAction : " + nextAction);
              float nextQ = nextState.actions[nextAction].q;
-             float reward = nextState.reward;
+             float reward = curentState.Value.reward;
              curentState.Value.actions[currentAction].q =
                 currentQ + tauxDapprentissage * (reward + gamma * nextQ - currentQ);
 
@@ -65,22 +64,17 @@ public class SARSA
 
              iteration++;
              
-          } while ( iteration <= 10);
+          } while ( iteration <= 100);
        }
        
-       foreach(KeyValuePair<IntList, State> kvp in mapState)
+       foreach (KeyValuePair<IntList, State> kvp in mapState)
        {
-          if(kvp.Value.vs.Count == 0)
-          {
-             continue;
-          }
-
           int bestAction = 0;
-          float bestScore = kvp.Value.vs[0];
+          float bestScore = -1;
 
-          for(int a = 1; a < kvp.Value.actions.Count; a++)
+          for(int a = 0; a < kvp.Value.actions.Count; a++)
           {
-             float tmp = kvp.Value.vs[a]; 
+             float tmp = kvp.Value.actions[a].q ; 
 
              if(tmp > bestScore)
              {
@@ -88,10 +82,9 @@ public class SARSA
                 bestAction = a;
              }
           }
-
           kvp.Value.currentAction = bestAction;
        }
-       
+      
    }
 
    // Algorithme d'exploration / exploitation
