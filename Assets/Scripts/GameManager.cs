@@ -57,10 +57,10 @@ public class GameManager : MonoBehaviour
                 MonteCarlo.Simulation(ref _mapState, 50, 10000, true, 0.4f, true, false);
                 break;
             case AlgoApply.Sarsa:
-                SARSA.SarsaAlgorithm(ref _mapState,0.5f,1000,0.4f,0.01f);
+                SARSA.SarsaAlgorithm(ref _mapState,0.5f,10000,0.4f,0.01f);
                 break;
             case AlgoApply.Qlearning:
-                QLearning.Qlearning(ref _mapState,0.5f,1000,0.4f,0.01f);
+                QLearning.Qlearning(ref _mapState,0.5f,10000,0.4f,0.01f);
                 break;
         }
     }

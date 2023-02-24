@@ -15,7 +15,7 @@ public class SARSA
       { 
          foreach (var action in state.Value.actions)
          {
-            action.q = 0f;
+            action.q = Random.Range(0f,1f);
          }
       }
       
@@ -35,7 +35,7 @@ public class SARSA
           int currentAction = EpsilonGreedy(mapState,xy,epsilon);
           
           int iteration = 0;
-          while (iteration == 1000000)
+          while (iteration <= 10)
           {
              // On exectue l'action initiale
              
@@ -55,13 +55,14 @@ public class SARSA
              float nextQ = nextState.actions[nextAction].q;
              float reward = nextState.reward;
              curentState.Value.actions[currentAction].q = currentQ + tauxDapprentissage * (reward + gamma * nextQ - currentQ);
-             
-             
+
+             mapState[curentState.Key].currentAction = currentAction;
              curentState = new KeyValuePair<IntList, State>(nextStateCoord,nextState);
              currentAction = nextAction;
 
              if (curentState.Value.final)
              {
+                Debug.Log("sort");
                 break;
              }
              iteration++;
