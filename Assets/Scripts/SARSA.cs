@@ -35,18 +35,20 @@ public class SARSA
           int currentAction = EpsilonGreedy(mapState,xy,epsilon);
           
           int iteration = 0;
-          while (iteration <= 10)
+
+
+          do
           {
              // On exectue l'action initiale
-             
+
              IntList nextStateCoord = curentState.Value.actions[currentAction].Act(curentState.Key);
              State nextState = mapState[nextStateCoord];
-             
+
 
              // On utilise l'algo d'exploration/exploitation 
              xy = nextStateCoord;
-             int nextAction = EpsilonGreedy(mapState,xy,epsilon);
-          
+             int nextAction = EpsilonGreedy(mapState, xy, epsilon);
+
              //mise a jour de Q(s,a)
 
              float currentQ = curentState.Value.actions[currentAction].q;
@@ -54,20 +56,42 @@ public class SARSA
              Debug.Log("nextAction : " + nextAction);
              float nextQ = nextState.actions[nextAction].q;
              float reward = nextState.reward;
-             curentState.Value.actions[currentAction].q = currentQ + tauxDapprentissage * (reward + gamma * nextQ - currentQ);
+             curentState.Value.actions[currentAction].q =
+                currentQ + tauxDapprentissage * (reward + gamma * nextQ - currentQ);
 
              mapState[curentState.Key].currentAction = currentAction;
-             curentState = new KeyValuePair<IntList, State>(nextStateCoord,nextState);
+             curentState = new KeyValuePair<IntList, State>(nextStateCoord, nextState);
              currentAction = nextAction;
 
-             if (curentState.Value.final)
-             {
-                Debug.Log("sort");
-                break;
-             }
              iteration++;
-          }
+             
+          } while ( iteration <= 10);
        }
+       
+       foreach(KeyValuePair<IntList, State> kvp in mapState)
+       {
+          if(kvp.Value.vs.Count == 0)
+          {
+             continue;
+          }
+
+          int bestAction = 0;
+          float bestScore = kvp.Value.vs[0];
+
+          for(int a = 1; a < kvp.Value.actions.Count; a++)
+          {
+             float tmp = kvp.Value.vs[a]; 
+
+             if(tmp > bestScore)
+             {
+                bestScore = tmp;
+                bestAction = a;
+             }
+          }
+
+          kvp.Value.currentAction = bestAction;
+       }
+       
    }
 
    // Algorithme d'exploration / exploitation
